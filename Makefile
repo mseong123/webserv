@@ -6,7 +6,7 @@
 #    By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/20 13:12:42 by yetay             #+#    #+#              #
-#    Updated: 2023/11/20 13:13:35 by yetay            ###   ########.fr        #
+#    Updated: 2023/11/20 14:20:57 by yetay            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,8 @@ RM = rm -rf
 
 NAME = webserv
 
-SRCS = src/webserv.cpp
-OBJS = $(SRCS:src/%.cpp=obj/%.o)
+SRCS = webserv.cpp
+OBJS = $(SRCS:%.cpp=obj/%.o)
 
 .PHONY: all \
 		test \
@@ -28,7 +28,7 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	@$(CPP) $(CFLAGS) -o $@ $^
 
-$(OBJS): obj/%.o: src/%.cpp | obj
+$(OBJS): obj/%.o: %.cpp | obj
 	@$(CC) -I$(INCLUDES) $(CFLAGS) -c -o $@ $<
 
 obj:
