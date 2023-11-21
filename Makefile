@@ -6,7 +6,7 @@
 #    By: melee <melee@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/20 13:12:42 by yetay             #+#    #+#              #
-#    Updated: 2023/11/20 17:13:45 by melee            ###   ########.fr        #
+#    Updated: 2023/11/21 13:47:34 by melee            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ RM = rm -rf
 
 NAME = webserv 
 
-SRCS = main.cpp CustomException.cpp HTTP.cpp Config.cpp
+SRCS = main.cpp CustomException.cpp HTTP.cpp Config.cpp Server.cpp Location.cpp
 OBJS = $(SRCS:%.cpp=obj/%.o)
 
 .PHONY: all \
