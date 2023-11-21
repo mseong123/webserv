@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+         #
+#    By: melee <melee@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/20 13:12:42 by yetay             #+#    #+#              #
-#    Updated: 2023/11/20 14:20:57 by yetay            ###   ########.fr        #
+#    Updated: 2023/11/20 17:13:45 by melee            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,9 @@ CPP = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
 RM = rm -rf
 
-NAME = webserv
+NAME = webserv 
 
-SRCS = webserv.cpp
+SRCS = main.cpp CustomException.cpp HTTP.cpp Config.cpp
 OBJS = $(SRCS:%.cpp=obj/%.o)
 
 .PHONY: all \
