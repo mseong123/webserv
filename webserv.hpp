@@ -15,8 +15,7 @@
 # include "HTTP.hpp"
 # include "Server.hpp"
 # include "Location.hpp"
-
-
+# include "Connection.hpp"
 
 # define DEFAULT_CONFIG "default_config.txt"
 
