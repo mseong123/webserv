@@ -3,7 +3,7 @@
 # include <iostream>
 # include <exception>
 
-# define DEFAULT_CONFIG "default_config"
+# define DEFAULT_CONFIG "default_config.txt"
 
 class CustomException;
 class HTTP;

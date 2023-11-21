@@ -8,6 +8,8 @@ class Config {
 		~Config();
 		void parse_file();
 		void read_file(std::fstream & fs);
+		void parse_server_block(size_t *pos);
+		void parse_whitespace(size_t *pos);
 		
 	private:
 		std::string _path;
