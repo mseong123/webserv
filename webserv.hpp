@@ -13,6 +13,9 @@
 # include "CustomException.hpp"
 # include "Config.hpp"
 # include "HTTP.hpp"
+# include "Server.hpp"
+# include "Location.hpp"
+
 
 
 # define DEFAULT_CONFIG "default_config.txt"

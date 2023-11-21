@@ -1,4 +1,4 @@
-#include "Server.hpp"
+#include "webserv.hpp"
 
 Server::Server(){
 }
@@ -30,18 +30,23 @@ std::vector<Location> & Server::get_location() {
 	return this->_location;
 }
 
-std::string Server::set_host(std::string host) {
+void Server::set_host(std::string host) {
 	this->_host = host;
 }
 
-std::string Server::set_port(std::string port) {
+void Server::set_port(std::string port) {
 	this->_port = port;
 }
 
-std::string Server::set_server_names(std::string server_names) {
+void Server::set_server_names(std::string server_names) {
 	this->_server_names = server_names;
 }
 
-std::string set_client_max_body_size(std::string client_max_body_size);
-	std::string set_error_pages();
+void Server::set_client_max_body_size(std::string client_max_body_size) {
+	this->_client_max_body_size = client_max_body_size;
+}
+
+void Server::set_error_pages(std::string error_pages) {
+	this->_error_pages = error_pages;
+}
 
