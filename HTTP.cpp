@@ -40,6 +40,21 @@ void HTTP::init(const std::string path) {
 	if (listen(sockfd, 3) < 0)
 		throw CustomException("Listen failure: " + std::string(strerror(errno)));
 
+	std::cout << "Listening on port " << sockfd << "." << std::endl;
+
+	socklen_t	addrlen;
+	int			newSocket;
+
+	addrlen = sizeof(addr);
+	while (true)
+	{
+		newSocket = accept(sockfd, (struct sockaddr*) &addr, &addrlen);
+		if (newSocket < 0)
+			throw CustomException("Accept failure: " + std::string(strerror(errno)));
+
+		std::cout << newSocket << std::endl;
+	}
+
 };
 
 std::vector<Server> & HTTP::get_server() {
