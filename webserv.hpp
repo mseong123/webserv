@@ -8,6 +8,8 @@
 # include <sys/socket.h>
 # include <unistd.h>
 # include <vector>
+# include <map>
+# include <algorithm>
 
 // class headers
 # include "CustomException.hpp"
