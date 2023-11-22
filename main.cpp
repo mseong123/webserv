@@ -1,6 +1,4 @@
 #include "webserv.hpp"
-#include "HTTP.hpp"
-#include "CustomException.hpp"
 
 int main (int argc, char **argv) {
 	HTTP http;

@@ -7,9 +7,9 @@ class HTTP {
 		HTTP();
 		~HTTP();
 		void init(const std::string path);
-		std::vector<Server> & get_servers();
+		std::vector<Server> & get_server();
 	private:
-		std::vector<Server> _servers;
+		std::vector<Server> _server;
 		
 
 };
