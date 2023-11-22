@@ -6,14 +6,15 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:37:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/21 19:03:23 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/22 16:46:36 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONNECTION_HPP
 # define CONNECTION_HPP
 
-class	Request {};
+# include "webserv.hpp"
+
 class	Response {};
 
 class	Connection
