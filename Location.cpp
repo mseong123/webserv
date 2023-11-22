@@ -6,8 +6,8 @@ Location::Location() {
 Location::~Location() {
 }
 
-std::string Location::get_URI() {
-	return this->_URI;
+std::string Location::get_route() {
+	return this->_route;
 }
 
 std::string Location::get_root() {
@@ -30,8 +30,8 @@ std::vector<std::string> & Location::get_index() {
 	return this->_index;
 }
 
-void Location::set_URI(std::string URI)  {
-	this->_URI = URI;
+void Location::set_route(std::string route)  {
+	this->_route = route;
 }
 
 void Location::set_root(std::string root) {

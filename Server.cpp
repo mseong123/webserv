@@ -1,6 +1,6 @@
 #include "webserv.hpp"
 
-Server::Server(){
+Server::Server() {
 }
 
 Server::~Server(){
@@ -22,7 +22,7 @@ std::string Server::get_client_max_body_size() {
 	return this->_client_max_body_size;
 }
 
-std::string Server::get_error_pages() {
+std::map<std::string, std::string> & Server::get_error_pages() {
 	return this->_error_pages;
 }
 
@@ -44,9 +44,5 @@ void Server::set_server_names(std::string server_names) {
 
 void Server::set_client_max_body_size(std::string client_max_body_size) {
 	this->_client_max_body_size = client_max_body_size;
-}
-
-void Server::set_error_pages(std::string error_pages) {
-	this->_error_pages = error_pages;
 }
 

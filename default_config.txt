@@ -1,2 +1,14 @@
-   server{listen 8712738:80;
+server{
+listen  8080;
+   server_names a;
+   location/ {
    }
+   error_pages 405 /405.html ;
+   client_max_body_size 1000;
+error_pages 404 /404.html ;
+location/ {
+
+}
+
+
+}
