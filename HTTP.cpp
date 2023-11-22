@@ -42,18 +42,68 @@ void HTTP::init(const std::string path) {
 
 	std::cout << "Listening on port " << sockfd << "." << std::endl;
 
-	socklen_t	addrlen;
+	// Add socket to vector of listening-only sockets
+	this->_listen.push_back(sockfd);
 
-	addrlen = sizeof(addr);
+	struct pollfd	fds[1024];
+	int				polls;
+
+	memset(fds, 0, sizeof(fds));
+	fds[0].fd = sockfd;
+	fds[0].events = POLLIN | POLLPRI;
 	while (true)
 	{
-		Connection	conn;
+		polls = poll(fds, 1024, 10000);
+		if (polls < 0)
+			throw CustomException("Poll failure: " + std::string(strerror(errno)));
+		if (polls == 0)
+			continue;
+		for (int i = 0; i < 1024; i++)
+		{
+			if (fds[i].revents & POLLIN)
+			{
+				std::cout << "POLLIN: " << fds[i].fd << std::endl;
+				bool	connect = false;
+				for (std::vector<int>::iterator it = _listen.begin(); it != _listen.end(); it++)
+				{
+					if (*it == fds[i].fd)
+					{
+						connect = true;
+						break;
+					}
+				}
+				if (connect == true)
+				{
+					Connection	conn;
+					socklen_t	addrlen;
 
-		conn.set_sockfd(accept(sockfd, (struct sockaddr*) &addr, &addrlen));
-		if (conn.get_sockfd() < 0)
-			throw CustomException("Accept failure: " + std::string(strerror(errno)));
-
-		std::cout << conn.get_sockfd() << std::endl;
+					addrlen = sizeof(addr);
+					conn.set_sockfd(accept(sockfd, (struct sockaddr*) &addr, &addrlen));
+					if (conn.get_sockfd() < 0)
+						throw CustomException("Accept failure: " + std::string(strerror(errno)));
+					std::cout << conn.get_sockfd() << std::endl;
+					for (int i = 0; i < 1024; i++)
+					{
+						if (fds[i].fd != 0)
+						{
+							continue;
+						}
+						else
+						{
+							fds[i].fd = conn.get_sockfd();
+							fds[i].events = POLLIN | POLLPRI | POLLOUT | POLLWRBAND;
+							break;
+						}
+					}
+					for (int i = 0; i < 1024; i++)
+						if (fds[i].fd > 0)
+							std::cout << fds[i].fd << " ";
+					std::cout << std::endl;
+				}
+			}
+			else if (fds[i].revents & POLLOUT)
+				std::cout << "POLLOUT: " << fds[i].fd << std::endl;
+		}
 	}
 
 };
