@@ -155,8 +155,11 @@ void Config::parse_location_block(size_t *pos, std::vector<Location> & _location
 		throw CustomException("CONFIG_FILE_ERROR: Incorrect route in location directive");
 	else {
 		temp_pos = this->_file_content.find_first_of(" \t{", *pos);
-		if (temp_pos != std::string::npos) {
+		if (temp_pos != std::string::npos)
+		{
+			std::cout << "here1"<<this->_file_content.substr(*pos, temp_pos - *pos) <<std::endl;
 			location.set_route(this->_file_content.substr(*pos, temp_pos - *pos));
+			std::cout << "here2"<< location.get_route() << std::endl;
 		}
 		*pos = temp_pos;
 	}
@@ -167,15 +170,26 @@ void Config::parse_location_block(size_t *pos, std::vector<Location> & _location
 	else
 		*pos += 1;
 	while (*pos != this->_file_content.length()) {
-		
+		parse_whitespace(pos);
+		if (this->_file_content[*pos] == '}') {
+			*pos += 1;
+			closing_bracket = true;
+			break;
+		}
+		else {
+			throw CustomException("CONFIG_FILE_ERROR: Incorrect directive in location block");
+		}
 	}
+	if (!closing_bracket)
+		throw CustomException("CONFIG_FILE_ERROR: Syntax error: missing } in location block");
 		
 }
 
 
 void Config::parse_server_block(size_t *pos, std::vector<Server> & _server) {
 	bool closing_bracket = false;
-	Server server;
+	Server *server1 = new Server();
+	Server & server = *server1;
 	_server.push_back(server);
 
 	parse_whitespace(pos);
@@ -236,6 +250,8 @@ void Config::parse_server_block(size_t *pos, std::vector<Server> & _server) {
 	std::cout << server.get_client_max_body_size() << std::endl;
 	std::cout << server.get_error_pages().find("405")->second << std::endl;
 	std::cout << server.get_error_pages().find("404")->second << std::endl;
+	// std::vector<Location> & _location = server.get_location();
+	// std::cout << _location[0].get_route() << std::endl;
 
 }
 
