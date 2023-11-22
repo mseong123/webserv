@@ -43,16 +43,17 @@ void HTTP::init(const std::string path) {
 	std::cout << "Listening on port " << sockfd << "." << std::endl;
 
 	socklen_t	addrlen;
-	int			newSocket;
 
 	addrlen = sizeof(addr);
 	while (true)
 	{
-		newSocket = accept(sockfd, (struct sockaddr*) &addr, &addrlen);
-		if (newSocket < 0)
+		Connection	conn;
+
+		conn.set_sockfd(accept(sockfd, (struct sockaddr*) &addr, &addrlen));
+		if (conn.get_sockfd() < 0)
 			throw CustomException("Accept failure: " + std::string(strerror(errno)));
 
-		std::cout << newSocket << std::endl;
+		std::cout << conn.get_sockfd() << std::endl;
 	}
 
 };
