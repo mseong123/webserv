@@ -464,42 +464,6 @@ void Config::parse_file(std::vector<Server> & _servers) {
 		}
 		if (_servers.empty())
 			throw CustomException("CONFIG_FILE_ERROR: need a server block");
-		size_t i = 0;
-		while (i < _servers.size())
-		{
-		std::cout<< "host: " <<_servers[i].get_host() << std::endl;
-		std::cout<< "port: " << _servers[i].get_port() << std::endl;
-		std::cout<< "server_names: " <<_servers[i].get_server_names() << std::endl;
-		std::cout<< "error_pages: " <<_servers[i].get_error_pages().find("404")->second << std::endl;
-		size_t j = 0;
-		std::vector<Location> & loc_vec = _servers[i].get_location();
-		std::cout << "location size: " << loc_vec.size() << std::endl;
-			while (j < loc_vec.size())
-			{
-				
-				Location & loc = loc_vec[j];
-				std::cout<< "route: " << loc.get_route() << std::endl;
-				std::cout<< "return: " << loc.get_return() << std::endl;
-				std::cout<< "autoindex: " << loc.get_autoindex() << std::endl;
-				std::cout<< "root: " << loc.get_root() << std::endl;
-				std::cout<< "cgi_pass: " << loc.get_cgi_pass() << std::endl;
-				size_t k = 0;
-				std::vector<std::string> & method_vec = loc.get_allowed_methods();
-				while (k < method_vec.size()) {
-					std::cout<< "methods: " << method_vec[k]<< std::endl;
-					k++;
-				}
-				size_t l = 0;
-				std::vector<std::string> & index_vec = loc.get_index();
-				while (l < index_vec.size()) {
-					std::cout<< "index: " << index_vec[l]<< std::endl;
-					l++;
-				}
-				j++;
-
-			}
-			std::cout << " " << std::endl;
-		i++;
-		}
 	}
+		
 }
