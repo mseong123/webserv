@@ -6,10 +6,9 @@ class HTTP {
 	public:
 		HTTP();
 		~HTTP();
+		std::vector<Server> & get_servers();
 		void init(const std::string path);
-		std::vector<Server> & get_server();
+		void print_servers();
 	private:
-		std::vector<Server> _server;
-		
-
+		std::vector<Server> _servers;
 };

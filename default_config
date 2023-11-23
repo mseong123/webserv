@@ -1,0 +1,22 @@
+
+
+
+server{
+	error_pages 102 /404.;
+	location/ {
+		index /html;
+	}
+
+
+
+	
+
+} server {
+	listen 		0.0.0:50;
+	client_max_body_size 1;
+	client_max_body_size 1;
+}      
+
+
+
+
