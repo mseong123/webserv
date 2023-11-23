@@ -99,7 +99,6 @@ void HTTP::init(const std::string path) {
 					{
 						if (fds[i].fd != 0)
 						{
-							//RECEIVE ETC.
 							continue;
 						}
 						else
@@ -110,9 +109,44 @@ void HTTP::init(const std::string path) {
 						}
 					}
 				}
+				else
+				{
+					char	buffer[1024];
+					int		recvstat;
+
+					recvstat = recv(fds[i].fd, buffer, 1024 - 2, 0);
+					if (recvstat < 0)
+						throw CustomException("Recv failure: " + std::string(strerror(errno)));
+					buffer[recvstat] = 0;
+					conn.get_request()->set_data(conn.get_request()->get_data() + std::string(buffer));
+					std::cout << conn.get_request()->get_data() << std::endl;
+				}
 			}
 			else if (fds[i].revents & POLLOUT)
+			{
 				std::cout << "POLLOUT: " << fds[i].fd << std::endl;
+				if (conn.get_request()->get_data().length() == 0)
+					continue;
+
+				std::string	servMsg;
+
+				servMsg = "HTTP/1.1 200 \r\nContent-Type: text/html\r\n";
+				servMsg = servMsg + "\r\n\r\n";
+				servMsg = servMsg + "<html><header><title>Go!</title>";
+				servMsg = servMsg + "</header><body><p>You did it!</p>";
+				servMsg = servMsg + "</body></html>";
+
+				if (send(fds[i].fd, servMsg.c_str(), servMsg.length(), 0) < 0)
+					throw CustomException("Send failure: " + std::string(strerror(errno)));
+				std::cout << "Response sent." << std::endl;
+
+				// CLOSE CONNECTION AND REMOVE FROM POLL FDS
+				close(fds[i].fd);
+				memset((void *) (fds + i), 0, sizeof(struct pollfd));
+				conn.set_sockfd(0);
+				conn.get_request()->set_data("");
+				continue;
+			}
 		}
 	}
 
