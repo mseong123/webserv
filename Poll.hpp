@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:26:45 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/23 18:21:32 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/23 20:35:41 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ class	Poll
 		Poll const	&operator=(Poll const &cls);
 
 		struct pollfd const	&get_fds(int i) const;
-		int					get_polls(void) const;
 
 		void	set_fds(struct pollfd const &pollfd);
 

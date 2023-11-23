@@ -6,14 +6,14 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/23 18:21:40 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/23 20:37:25 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserv.hpp"
 
 /* Default constructor */
-Poll::Poll(void) : _polls(0)
+Poll::Poll(void)
 {
 	memset(this->_fds, 0, sizeof(this->_fds));
 	return ;
@@ -37,7 +37,6 @@ Poll const	&Poll::operator=(Poll const &cls)
 {
 	for (int i = 0; i < 1024; i++)
 		this->_fds[i] = cls.get_fds(i);
-	this->_polls = cls.get_polls();
 	return (*this);
 }
 
