@@ -4,6 +4,7 @@
 # include <iostream>
 # include <exception>
 # include <fstream>
+# include <netdb.h>
 # include <netinet/in.h>
 # include <sys/poll.h>
 # include <sys/socket.h>
