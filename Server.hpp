@@ -8,8 +8,8 @@ class Server {
 	public:
 		Server();
 		~Server();
-		std::string get_host();
-		std::string get_port();
+		std::string get_host() const;
+		std::string get_port() const;
 		std::string get_server_names();
 		std::string get_client_max_body_size();
 		std::map<std::string, std::string> & get_error_pages();

@@ -6,12 +6,12 @@
 #    By: melee <melee@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/20 13:12:42 by yetay             #+#    #+#              #
-#    Updated: 2023/11/21 13:47:34 by melee            ###   ########.fr        #
+#    Updated: 2023/11/22 12:09:21 by melee            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CPP = c++
-CFLAGS = -Wall -Wextra -Werror -std=c++98
+CFLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address -g3
 RM = rm -rf
 
 NAME = webserv 
