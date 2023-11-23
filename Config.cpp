@@ -184,7 +184,7 @@ void Config::parse_allowed_methods(size_t *pos, Location & location) {
 				*pos = temp_pos;
 			}
 			else
-				throw CustomException("CONFIG_FILE_ERROR: Incorrect allowed_methods value (use only GET, POST and DELETE methods)");
+				throw CustomException("CONFIG_FILE_ERROR: Incorrect value in allowed_methods directive (use only GET, POST and DELETE methods)");
 		}
 	}
 	this->check_semicolon(pos, "allowed_methods");
@@ -203,6 +203,7 @@ void Config::parse_return(size_t *pos, Location & location) {
 		temp_pos = this->_file_content.find_first_of(";", *pos);
 		if (temp_pos != std::string::npos)
 		{
+			
 			std::string path = this->_file_content.substr(*pos, temp_pos - *pos);
 			if (path.find_first_of(" \t") != std::string::npos)
 				throw CustomException("CONFIG_FILE_ERROR: Incorrect value in return directive");
@@ -213,6 +214,111 @@ void Config::parse_return(size_t *pos, Location & location) {
 		}
 	}
 	this->check_semicolon(pos, "return");
+}
+
+void Config::parse_autoindex(size_t *pos, Location & location) {
+	size_t temp_pos = *pos;
+
+	parse_whitespace(pos, this->_file_content);
+	if (temp_pos == *pos)
+		throw CustomException("CONFIG_FILE_ERROR: Need whitespace after autoindex keyword");
+
+	if (this->_file_content[*pos] == ';') 
+		throw CustomException("CONFIG_FILE_ERROR: Need a value in autoindex directive");
+	else {
+		temp_pos = this->_file_content.find_first_of(";", *pos);
+		if (temp_pos != std::string::npos)
+		{
+			std::string autoindex = this->_file_content.substr(*pos, temp_pos - *pos);
+			if (autoindex == "on" || autoindex == "off") {
+				autoindex == "on"? location.set_autoindex(true) : location.set_autoindex(false);
+				*pos = temp_pos;
+			}
+			else
+				throw CustomException("CONFIG_FILE_ERROR: Incorrect value in autoindex directive (use only 'on' or 'off')");
+		
+		}
+	}
+	this->check_semicolon(pos, "autoindex");
+}
+
+void Config::parse_root(size_t *pos, Location & location) {
+	size_t temp_pos = *pos;
+
+	parse_whitespace(pos, this->_file_content);
+	if (temp_pos == *pos)
+		throw CustomException("CONFIG_FILE_ERROR: Need whitespace after root keyword");
+
+	if (this->_file_content[*pos] == ';') 
+		throw CustomException("CONFIG_FILE_ERROR: Need a value in root directive");
+	else {
+		temp_pos = this->_file_content.find_first_of(";", *pos);
+		if (temp_pos != std::string::npos)
+		{
+			std::string path = this->_file_content.substr(*pos, temp_pos - *pos);
+			if (path.find_first_of(" \t") != std::string::npos)
+				throw CustomException("CONFIG_FILE_ERROR: Incorrect value in root directive");
+			else {
+				location.set_root(path);
+				*pos = temp_pos;
+			}
+		}
+	}
+	this->check_semicolon(pos, "root");
+}
+
+void Config::parse_index(size_t *pos, Location & location) {
+	size_t temp_pos = *pos;
+
+	parse_whitespace(pos, this->_file_content);
+	if (temp_pos == *pos)
+		throw CustomException("CONFIG_FILE_ERROR: Need whitespace after index keyword");
+
+	if (this->_file_content[*pos] == ';') 
+		throw CustomException("CONFIG_FILE_ERROR: Need a value in index directive");
+	else {
+		temp_pos = this->_file_content.find_first_of(";", *pos);
+		if (temp_pos != std::string::npos)
+		{
+			std::string index = this->_file_content.substr(*pos, temp_pos - *pos);
+			if (index.find_first_of(" \t") != std::string::npos)
+				throw CustomException("CONFIG_FILE_ERROR: Incorrect value in index directive");
+			else {
+				std::vector<std::string>::iterator it;
+				std::vector<std::string> & index_vec = location.get_index();
+				it = std::find(index_vec.begin(), index_vec.end(), index);
+				if (it == index_vec.end())
+					index_vec.push_back(index);
+				*pos = temp_pos;
+			}
+		}
+	}
+	this->check_semicolon(pos, "index");
+}
+
+void Config::parse_cgi_pass(size_t *pos, Location & location) {
+	size_t temp_pos = *pos;
+
+	parse_whitespace(pos, this->_file_content);
+	if (temp_pos == *pos)
+		throw CustomException("CONFIG_FILE_ERROR: Need whitespace after cgi_pass keyword");
+
+	if (this->_file_content[*pos] == ';') 
+		throw CustomException("CONFIG_FILE_ERROR: Need a value in cgi_pass directive");
+	else {
+		temp_pos = this->_file_content.find_first_of(";", *pos);
+		if (temp_pos != std::string::npos)
+		{
+			std::string path = this->_file_content.substr(*pos, temp_pos - *pos);
+			if (path.find_first_of(" \t") != std::string::npos)
+				throw CustomException("CONFIG_FILE_ERROR: Incorrect value in cgi_pass directive");
+			else {
+				location.set_cgi_pass(path);
+				*pos = temp_pos;
+			}
+		}
+	}
+	this->check_semicolon(pos, "cgi_pass");
 }
 
 void Config::parse_location_block(size_t *pos, std::vector<Location> & _location) {
@@ -244,6 +350,22 @@ void Config::parse_location_block(size_t *pos, std::vector<Location> & _location
 		else if (this->_file_content.substr(*pos, 6) == "return") {
 			*pos += 6;
 			this->parse_return(pos, location);
+		}
+		else if (this->_file_content.substr(*pos, 4) == "root") {
+			*pos += 4;
+			this->parse_root(pos, location);
+		}
+		else if (this->_file_content.substr(*pos, 8) == "cgi_pass") {
+			*pos += 8;
+			this->parse_cgi_pass(pos, location);
+		}
+		else if (this->_file_content.substr(*pos, 9) == "autoindex") {
+			*pos += 9;
+			this->parse_autoindex(pos, location);
+		}
+		else if (this->_file_content.substr(*pos, 5) == "index") {
+			*pos += 5;
+			this->parse_index(pos, location);
 		}
 		else if (this->_file_content[*pos] == '}') {
 			*pos += 1;
@@ -358,11 +480,20 @@ void Config::parse_file(std::vector<Server> & _servers) {
 				Location & loc = loc_vec[j];
 				std::cout<< "route: " << loc.get_route() << std::endl;
 				std::cout<< "return: " << loc.get_return() << std::endl;
+				std::cout<< "autoindex: " << loc.get_autoindex() << std::endl;
+				std::cout<< "root: " << loc.get_root() << std::endl;
+				std::cout<< "cgi_pass: " << loc.get_cgi_pass() << std::endl;
 				size_t k = 0;
 				std::vector<std::string> & method_vec = loc.get_allowed_methods();
 				while (k < method_vec.size()) {
 					std::cout<< "methods: " << method_vec[k]<< std::endl;
 					k++;
+				}
+				size_t l = 0;
+				std::vector<std::string> & index_vec = loc.get_index();
+				while (l < index_vec.size()) {
+					std::cout<< "index: " << index_vec[l]<< std::endl;
+					l++;
 				}
 				j++;
 
