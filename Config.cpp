@@ -168,25 +168,26 @@ void Config::parse_allowed_methods(size_t *pos, Location & location) {
 	if (temp_pos == *pos)
 		throw CustomException("CONFIG_FILE_ERROR: Need whitespace after allowed_methods keyword");
 
-	if ((temp_pos = this->_file_content.find_first_not_of(" ;\t}", *pos)) == std::string::npos) 
-		throw CustomException("CONFIG_FILE_ERROR: Need one allowed_methods value");
+	if (this->_file_content[*pos] == ';') 
+		throw CustomException("CONFIG_FILE_ERROR: Need a value in allowed_methods directive");
 	else {
-		*pos = temp_pos;
-		temp_pos = this->_file_content.find_first_of(" ;\t}", *pos);
+		temp_pos = this->_file_content.find_first_of(";", *pos);
 		if (temp_pos != std::string::npos)
 		{
-			std::string allowed_method = this->_file_content.substr(*pos, temp_pos - *pos);
-			std::cout << allowed_method << std::endl;
-			if (allowed_method == "POST" || allowed_method == "GET" || allowed_method == "DELETE")
-			{
-				location.get_allowed_methods().push_back(allowed_method);
+			std::string method = this->_file_content.substr(*pos, temp_pos - *pos);
+			if (method == "GET" || method == "POST" || method == "DELETE") {
+				std::vector<std::string>::iterator it;
+				std::vector<std::string> & method_vec = location.get_allowed_methods();
+				it = std::find(method_vec.begin(), method_vec.end(), method);
+				if (it == method_vec.end())
+					method_vec.push_back(method);
 				*pos = temp_pos;
 			}
 			else
-				throw CustomException("CONFIG_FILE_ERROR: Incorrect allowed_methods value");
+				throw CustomException("CONFIG_FILE_ERROR: Incorrect allowed_methods value (use only GET, POST and DELETE methods)");
 		}
-		this->check_semicolon(pos, "allowed_methods");
 	}
+	this->check_semicolon(pos, "allowed_methods");
 	
 }
 
@@ -204,7 +205,6 @@ void Config::parse_location_block(size_t *pos, std::vector<Location> & _location
 			location.set_route(this->_file_content.substr(*pos, temp_pos - *pos));
 		*pos = temp_pos;
 	}
-
 	parse_whitespace(pos, this->_file_content);
 	if (this->_file_content[*pos] != '{') 
 		throw CustomException("CONFIG_FILE_ERROR: Syntax error: missing { in location block");
@@ -219,15 +219,16 @@ void Config::parse_location_block(size_t *pos, std::vector<Location> & _location
 		}
 		else if (this->_file_content[*pos] == '}') {
 			*pos += 1;
+			closing_bracket = true;
 			break;
 		}
-		else {
-			throw CustomException("CONFIG_FILE_ERROR: Incorrect directive in location block or missing } in location block");
+		else if (*pos != this->_file_content.length()) {
+			throw CustomException("CONFIG_FILE_ERROR: Incorrect directive in location block");
 		}
 	}
+	if (!closing_bracket)
+		throw CustomException("CONFIG_FILE_ERROR: missing } in location block");
 	_location.push_back(location);
-	std::cout<<"size"<<_location.size()<<std::endl;
-		
 }
 
 void Config::parse_server_block(size_t *pos, std::vector<Server> & _server) {
@@ -321,6 +322,22 @@ void Config::parse_file(std::vector<Server> & _servers) {
 		std::cout<<_servers[i].get_port() << std::endl;
 		std::cout<<_servers[i].get_server_names() << std::endl;
 		std::cout<<_servers[i].get_error_pages().find("404")->second << std::endl;
+		size_t j = 0;
+		std::vector<Location> & loc_vec = _servers[i].get_location();
+		std::cout << "location size " << loc_vec.size() << std::endl;
+			while (j < loc_vec.size())
+			{
+				
+				Location & loc = loc_vec[j];
+				size_t k = 0;
+				std::vector<std::string> & method_vec = loc.get_allowed_methods();
+				while (k < method_vec.size()) {
+					std::cout<< "methods" << method_vec[k]<< std::endl;
+					k++;
+				}
+				j++;
+			}
+		
 		i++;
 		}
 	}
