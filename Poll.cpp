@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/23 20:37:25 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/23 21:49:14 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,102 @@ Poll const	&Poll::operator=(Poll const &cls)
 struct pollfd const	&Poll::get_fds(int i) const
 {
 	return (this->_fds[i]);
+}
+
+/* Setter: set value of _fds at index i */
+void	Poll::set_fds(int i, int fd, int ev, int rev)
+{
+	this->_fds[i].fd = fd;
+	this->_fds[i].events = ev;
+	this->_fds[i].revents = rev;
+	return ;
+}
+
+/* Polls through the _fds array for ready FDs */
+int	Poll::check(void)
+{
+	return (poll(this->_fds, 1024, 10000));
+}
+
+/* Goes through the _fds array and process each ready FD */
+void	Poll::process(Connection &conn, std::vector<int> listens, struct addrinfo *res)
+{
+	for (int i = 0; i < 1024; i++)
+	{
+		if (this->_fds[i].revents & POLLIN)
+		{
+			std::cout << "POLLIN: " << this->_fds[i].fd << std::endl;
+
+			// THIS PART CHECKS IF THE SOCKET IS A LISTENING-ONLY SOCKET
+			// SHOULD BE A UTILITY FUNCTION
+			// IF TRUE, CREATE NEW CONNECTION
+			bool	connect = false;
+			for (std::vector<int>::iterator it = listens.begin(); it != listens.end(); it++)
+			{
+				if (*it == this->_fds[i].fd)
+				{
+					connect = true;
+					break;
+				}
+			}
+
+			if (connect == true)
+			{
+				conn.set_sockfd(accept(this->_fds[i].fd, (struct sockaddr*) &res->ai_addr, &res->ai_addrlen));
+				if (conn.get_sockfd() < 0)
+					throw CustomException("Accept failure: " + std::string(strerror(errno)));
+				std::cout << conn.get_sockfd() << std::endl;
+				this->set_fds(this->get_empty(), conn.get_sockfd(), POLLIN | POLLPRI | POLLOUT | POLLWRBAND, 0);
+			}
+			else
+			{
+				char	buffer[1024];
+				int		recvstat;
+
+				recvstat = recv(this->_fds[i].fd, buffer, 1024 - 2, 0);
+				if (recvstat < 0)
+					throw CustomException("Recv failure: " + std::string(strerror(errno)));
+				buffer[recvstat] = 0;
+				conn.get_request()->set_data(conn.get_request()->get_data() + std::string(buffer));
+				std::cout << conn.get_request()->get_data() << std::endl;
+			}
+		}
+		else if (this->_fds[i].revents & POLLOUT)
+		{
+			std::cout << "POLLOUT: " << this->_fds[i].fd << std::endl;
+			if (conn.get_request()->get_data().length() == 0)
+				continue;
+
+			std::string	servMsg;
+
+			servMsg = "HTTP/1.1 200 \r\nContent-Type: text/html\r\n";
+			servMsg = servMsg + "\r\n\r\n";
+			servMsg = servMsg + "<html><header><title>Go!</title>";
+			servMsg = servMsg + "</header><body><p>You did it!</p>";
+			servMsg = servMsg + "</body></html>";
+
+			if (send(this->_fds[i].fd, servMsg.c_str(), servMsg.length(), 0) < 0)
+				throw CustomException("Send failure: " + std::string(strerror(errno)));
+			std::cout << "Response sent." << std::endl;
+
+			// CLOSE CONNECTION AND REMOVE FROM POLL FDS
+			close(this->_fds[i].fd);
+			memset((void *) (this->_fds + i), 0, sizeof(struct pollfd));
+			conn.set_sockfd(0);
+			conn.get_request()->set_data("");
+			continue;
+		}
+	}
+	return ;
+}
+
+/* Getter: return index of first empty struct in _fds */
+int	Poll::get_empty(void) const
+{
+	int	i = 0;
+	while (this->_fds[i].fd != 0)
+		i++;
+	return (i);
 }
 
 /* Insertion operator overload (OSTREAM) */
