@@ -39,33 +39,38 @@ void Config::parse_listen(size_t *pos, Server & server) {
 	if (temp_pos == *pos)
 		throw CustomException("CONFIG_FILE_ERROR: need whitespace after listen keyword");
 
-	if ((temp_pos = this->_file_content.find(":", *pos)) != std::string::npos) {
-		std::string host = this->_file_content.substr(*pos, temp_pos - *pos);
-		if (host.find_first_not_of("0123456789.") != std::string::npos)
-			throw CustomException("CONFIG_FILE_ERROR: Incorrect host value");
-		if (host == "")
-			server.set_host("0.0.0.0");
-		else
-			server.set_host(host);
-		*pos = temp_pos + 1;
-	}
-	parse_whitespace(pos);
-	if (this->_file_content.find_first_of("0123456789", *pos) == std::string::npos) {
+	if (this->_file_content[*pos] == ';') 
 		throw CustomException("CONFIG_FILE_ERROR: Need a host:name value in listen directive");
-	}
 	else {
-		if (server.get_host() == "")
-			server.set_host("0.0.0.0");
-		temp_pos = this->_file_content.find_first_of(" ;\t", *pos);
+		temp_pos = this->_file_content.find_first_of(";", *pos);
 		if (temp_pos != std::string::npos)
 		{
-			if (this->_file_content.substr(*pos, temp_pos-* pos).find_first_not_of("0123456789") != std::string::npos)
-				throw CustomException("CONFIG_FILE_ERROR: Incorrect port value");
-			server.set_port(this->_file_content.substr(*pos, temp_pos - *pos));
-			*pos = temp_pos;
+			std::string host_value = this->_file_content.substr(*pos, temp_pos - *pos);
+			size_t host_delim_pos = 0;
+			if ((host_delim_pos = host_value.find_first_of(":")) != std::string::npos) {
+				if (host_delim_pos == 0) 
+					server.set_host("0.0.0.0");
+				else {
+					if (host_value.substr(0, host_delim_pos).find_first_not_of("0123456789.") != std::string::npos)
+						throw CustomException("CONFIG_FILE_ERROR: Incorrect host in listen directive");
+					else
+						server.set_host(host_value.substr(0, host_delim_pos));
+				}
+				*pos = host_delim_pos + *pos + 1;
+			}
+			if (*pos == temp_pos) 
+				throw CustomException("CONFIG_FILE_ERROR: Need a port value in listen directive");
+			else if (this->_file_content.substr(*pos, temp_pos - *pos).find_first_not_of("0123456789") != std::string::npos)
+			 	throw CustomException("CONFIG_FILE_ERROR: Incorrect port in listen directive");
+			else {
+				if (server.get_host() == "")
+					server.set_host("0.0.0.0");
+				server.set_port(this->_file_content.substr(*pos, temp_pos - *pos));
+				*pos = temp_pos;
+			}
 		}
-		this->check_semicolon(pos, "listen");
 	}
+	this->check_semicolon(pos, "listen");
 }
 
 void Config::parse_server_names(size_t *pos, Server & server) {
@@ -76,13 +81,17 @@ void Config::parse_server_names(size_t *pos, Server & server) {
 		throw CustomException("CONFIG_FILE_ERROR: Need whitespace after server_names keyword");
 
 	if (this->_file_content[*pos] == ';') 
-		throw CustomException("CONFIG_FILE_ERROR: Need a server_names value");
+		throw CustomException("CONFIG_FILE_ERROR: Need a value in server_names directive");
 	else {
-		temp_pos = this->_file_content.find_first_of(" ;\t", *pos);
+		temp_pos = this->_file_content.find_first_of(";", *pos);
 		if (temp_pos != std::string::npos)
 		{
-			server.set_server_names(this->_file_content.substr(*pos, temp_pos - *pos));
-			*pos = temp_pos;
+			if (this->_file_content.substr(*pos, temp_pos - *pos).find_first_not_of("abcdefghijklmnopqrstuvwxyz0123456789._") != std::string::npos)
+				throw CustomException("CONFIG_FILE_ERROR: Incorrect server_names value");
+			else {
+				server.set_server_names(this->_file_content.substr(*pos, temp_pos - *pos));
+				*pos = temp_pos;
+			}
 		}
 	}
 	this->check_semicolon(pos, "server_names");
@@ -302,5 +311,7 @@ void Config::parse_file(std::vector<Server> & _servers) {
 		if (_servers.empty())
 			throw CustomException("CONFIG_FILE_ERROR: need a server block");
 		std::cout<<_servers[0].get_host() << std::endl;
+		std::cout<<_servers[0].get_port() << std::endl;
+		std::cout<<_servers[0].get_server_names() << std::endl;
 	}
 }
