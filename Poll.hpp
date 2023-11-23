@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:26:45 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/23 18:06:27 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/23 18:21:32 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,12 @@ class	Poll
 		struct pollfd const	&get_fds(int i) const;
 		int					get_polls(void) const;
 
+		void	set_fds(struct pollfd const &pollfd);
+
 		void	put_fds(void) const;
 
 	private:
 		struct pollfd	_fds[1024];
-		int				_polls;
 };
 
 std::ostream	&operator<<(std::ostream &out, Poll const &cls);

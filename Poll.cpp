@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/23 18:08:12 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/23 18:21:40 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,6 @@ Poll const	&Poll::operator=(Poll const &cls)
 struct pollfd const	&Poll::get_fds(int i) const
 {
 	return (this->_fds[i]);
-}
-
-/* Getter: return value of _polls */
-int	Poll::get_polls(void) const
-{
-	return (this->_polls);
 }
 
 /* Insertion operator overload (OSTREAM) */
