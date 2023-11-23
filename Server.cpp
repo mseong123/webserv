@@ -6,11 +6,11 @@ Server::Server() {
 Server::~Server(){
 }
 
-std::string Server::get_host(){
+std::string Server::get_host() const{
 	return this->_host;
 }
 
-std::string Server::get_port() {
+std::string Server::get_port() const{
 	return this->_port;
 }
 
