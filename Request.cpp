@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 16:28:40 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/22 16:52:35 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/23 13:20:33 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ std::string	Request::get_data(void) const
 }
 
 /* Setter: set value of _data */
-void	Request::set_data(std::string &s)
+void	Request::set_data(std::string const &s)
 {
 	this->_data = s;
 	return ;
