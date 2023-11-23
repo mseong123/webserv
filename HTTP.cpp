@@ -47,6 +47,8 @@ void HTTP::init(const std::string path) {
 
 	struct pollfd	fds[1024];
 	int				polls;
+	Connection		conn;
+	socklen_t		addrlen;
 
 	memset(fds, 0, sizeof(fds));
 	fds[0].fd = sockfd;
@@ -58,11 +60,24 @@ void HTTP::init(const std::string path) {
 			throw CustomException("Poll failure: " + std::string(strerror(errno)));
 		if (polls == 0)
 			continue;
+
+		// THIS PART JUST PRINTS OUT THE FDS IN THE POLL FDS ARRAY
+		std::cout << "Polls: ";
+		for (int i = 0; i < 1024; i++)
+			if (fds[i].fd > 0)
+				std::cout << fds[i].fd << " ";
+		std::cout << std::endl;
+
+		// CHECKS THROUGH ALL THE FDS IN THE POLL FDS ARRAY FOR REVENTS
 		for (int i = 0; i < 1024; i++)
 		{
 			if (fds[i].revents & POLLIN)
 			{
 				std::cout << "POLLIN: " << fds[i].fd << std::endl;
+
+				// THIS PART CHECKS IF THE SOCKET IS A LISTENING-ONLY SOCKET
+				// SHOULD BE A UTILITY FUNCTION
+				// IF TRUE, CREATE NEW CONNECTION
 				bool	connect = false;
 				for (std::vector<int>::iterator it = _listen.begin(); it != _listen.end(); it++)
 				{
@@ -72,11 +87,9 @@ void HTTP::init(const std::string path) {
 						break;
 					}
 				}
+
 				if (connect == true)
 				{
-					Connection	conn;
-					socklen_t	addrlen;
-
 					addrlen = sizeof(addr);
 					conn.set_sockfd(accept(sockfd, (struct sockaddr*) &addr, &addrlen));
 					if (conn.get_sockfd() < 0)
@@ -86,6 +99,7 @@ void HTTP::init(const std::string path) {
 					{
 						if (fds[i].fd != 0)
 						{
+							//RECEIVE ETC.
 							continue;
 						}
 						else
@@ -95,10 +109,6 @@ void HTTP::init(const std::string path) {
 							break;
 						}
 					}
-					for (int i = 0; i < 1024; i++)
-						if (fds[i].fd > 0)
-							std::cout << fds[i].fd << " ";
-					std::cout << std::endl;
 				}
 			}
 			else if (fds[i].revents & POLLOUT)
