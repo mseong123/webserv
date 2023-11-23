@@ -18,8 +18,8 @@ std::vector<std::string> & Location::get_allowed_methods() {
 	return this->_allowed_methods;
 };
 
-std::string Location::get_redirection_path() {
-	return this->_redirection_path;
+std::string Location::get_return() {
+	return this->_return;
 }
 
 bool Location::get_autoindex() {
@@ -38,8 +38,8 @@ void Location::set_root(std::string root) {
 	this->_root = root;
 }
 
-void Location::set_redirection_path(std::string redirection_path) {
-	this->_redirection_path = redirection_path;
+void Location::set_return(std::string _return) {
+	this->_return = _return;
 }
 
 void Location::set_autoindex(bool trigger) {

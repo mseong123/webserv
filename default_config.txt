@@ -1,17 +1,17 @@
 server{
 	error_pages 404 /404.html;
-server_names _; 
+server_names _;
 listen 8:2;
 	location/{
 
 		allowed_methods GET;
 		allowed_methods DELETE;
 		allowed_methods POST;
-
+	return https:;
 		allowed_methods POST;
 	}
 	location/{
-
+		return https: ;
 		allowed_methods GET;
 		allowed_methods DELETE;
 		allowed_methods POST;

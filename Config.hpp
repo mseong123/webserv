@@ -18,6 +18,7 @@ class Config {
 		void parse_client_max_body_size(size_t *pos, Server & server);
 		void parse_error_pages(size_t *pos, Server & server);
 		void parse_allowed_methods(size_t *pos, Location & location);
+		void parse_return(size_t *pos, Location & location);
 		void parse_whitespace(size_t *pos, std::string content);
 		void check_semicolon(size_t *pos, std::string keyword);
 		

@@ -188,7 +188,31 @@ void Config::parse_allowed_methods(size_t *pos, Location & location) {
 		}
 	}
 	this->check_semicolon(pos, "allowed_methods");
-	
+}
+
+void Config::parse_return(size_t *pos, Location & location) {
+	size_t temp_pos = *pos;
+
+	parse_whitespace(pos, this->_file_content);
+	if (temp_pos == *pos)
+		throw CustomException("CONFIG_FILE_ERROR: Need whitespace after return keyword");
+
+	if (this->_file_content[*pos] == ';') 
+		throw CustomException("CONFIG_FILE_ERROR: Need a value in return directive");
+	else {
+		temp_pos = this->_file_content.find_first_of(";", *pos);
+		if (temp_pos != std::string::npos)
+		{
+			std::string path = this->_file_content.substr(*pos, temp_pos - *pos);
+			if (path.find_first_of(" \t") != std::string::npos)
+				throw CustomException("CONFIG_FILE_ERROR: Incorrect value in return directive");
+			else {
+				location.set_return(path);
+				*pos = temp_pos;
+			}
+		}
+	}
+	this->check_semicolon(pos, "return");
 }
 
 void Config::parse_location_block(size_t *pos, std::vector<Location> & _location) {
@@ -198,7 +222,7 @@ void Config::parse_location_block(size_t *pos, std::vector<Location> & _location
 	
 	parse_whitespace(pos, this->_file_content);
 	if (this->_file_content[*pos] != '/') 
-		throw CustomException("CONFIG_FILE_ERROR: Incorrect route in location directive");
+		throw CustomException("CONFIG_FILE_ERROR: Incorrect route in location block");
 	else {
 		temp_pos = this->_file_content.find_first_of(" \t{", *pos);
 		if (temp_pos != std::string::npos)
@@ -216,6 +240,10 @@ void Config::parse_location_block(size_t *pos, std::vector<Location> & _location
 		if (this->_file_content.substr(*pos, 15) == "allowed_methods") {
 			*pos += 15;
 			this->parse_allowed_methods(pos, location);
+		}
+		else if (this->_file_content.substr(*pos, 6) == "return") {
+			*pos += 6;
+			this->parse_return(pos, location);
 		}
 		else if (this->_file_content[*pos] == '}') {
 			*pos += 1;
@@ -283,7 +311,6 @@ void Config::parse_server_block(size_t *pos, std::vector<Server> & _server) {
 		else if (*pos != this->_file_content.length()) {
 			throw CustomException("CONFIG_FILE_ERROR: Incorrect directive in server block");
 		}
-		
 	}
 	
 	if (!closing_bracket)
@@ -318,26 +345,29 @@ void Config::parse_file(std::vector<Server> & _servers) {
 		size_t i = 0;
 		while (i < _servers.size())
 		{
-		std::cout<<_servers[i].get_host() << std::endl;
-		std::cout<<_servers[i].get_port() << std::endl;
-		std::cout<<_servers[i].get_server_names() << std::endl;
-		std::cout<<_servers[i].get_error_pages().find("404")->second << std::endl;
+		std::cout<< "host: " <<_servers[i].get_host() << std::endl;
+		std::cout<< "port: " << _servers[i].get_port() << std::endl;
+		std::cout<< "server_names: " <<_servers[i].get_server_names() << std::endl;
+		std::cout<< "error_pages: " <<_servers[i].get_error_pages().find("404")->second << std::endl;
 		size_t j = 0;
 		std::vector<Location> & loc_vec = _servers[i].get_location();
-		std::cout << "location size " << loc_vec.size() << std::endl;
+		std::cout << "location size: " << loc_vec.size() << std::endl;
 			while (j < loc_vec.size())
 			{
 				
 				Location & loc = loc_vec[j];
+				std::cout<< "route: " << loc.get_route() << std::endl;
+				std::cout<< "return: " << loc.get_return() << std::endl;
 				size_t k = 0;
 				std::vector<std::string> & method_vec = loc.get_allowed_methods();
 				while (k < method_vec.size()) {
-					std::cout<< "methods" << method_vec[k]<< std::endl;
+					std::cout<< "methods: " << method_vec[k]<< std::endl;
 					k++;
 				}
 				j++;
+
 			}
-		
+			std::cout << " " << std::endl;
 		i++;
 		}
 	}
