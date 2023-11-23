@@ -20,6 +20,7 @@
 # include "Location.hpp"
 # include "Request.hpp"
 # include "Connection.hpp"
+# include "Poll.hpp"
 
 # define DEFAULT_CONFIG "default_config.txt"
 
