@@ -20,8 +20,6 @@
 # include "Server.hpp"
 # include "Location.hpp"
 
-
-
-# define DEFAULT_CONFIG "default_config.txt"
+# define DEFAULT_CONFIG "default_config"
 
 #endif

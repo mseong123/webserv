@@ -166,28 +166,16 @@ void ConfigServer::parse_server_block(size_t *pos, std::vector<Server> & _server
 	while (*pos != file_content.length()) {
 		parse_whitespace(pos, file_content);
 		if (file_content.substr(*pos, 6) == "listen") {
-			if (server.get_host() != "")
-				throw CustomException("CONFIG_FILE_ERROR: Only 1 listen directive allowed in server block");
-			else {
 				*pos += 6;
 				this->parse_listen(pos, server, file_content);
 			}
-		}
 		else if (file_content.substr(*pos, 12) == "server_names") {
-			if (server.get_server_names() != "")
-				throw CustomException("CONFIG_FILE_ERROR: Only 1 server_names directive allowed in server block");
-			else {
 				*pos += 12;
 				this->parse_server_names(pos, server, file_content);
 			}
-		}
 		else if (file_content.substr(*pos, 20) == "client_max_body_size") {
-			if (server.get_client_max_body_size() != "")
-				throw CustomException("CONFIG_FILE_ERROR: Only 1 client_max_body_size directive allowed in server block");
-			else {
 				*pos += 20;
 				this->parse_client_max_body_size(pos, server, file_content);
-			}
 		}
 		else if (file_content.substr(*pos, 11) == "error_pages") {
 			*pos += 11;
