@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/24 17:42:13 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/24 18:03:08 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	Poll::add_fd(int fd, int ev)
 {
 	int	i;
 
-	i = Poll::get_empty();
+	i = get_empty();
 	if (i == 1024)
 		return (-1);
 	fds[i].fd = fd;
@@ -62,12 +62,21 @@ int	Poll::update_fd(int fd, int ev)
 {
 	int	i;
 
-	i = Poll::get_fds_index(fd);
+	i = get_fds_index(fd);
 	if (i < 0)
 		throw CustomException("Poll::update_fd() failure: fd not in Poll::fds");
 	fds[i].events = ev;
 	fds[i].revents = 0;
 	return (0);
+}
+
+/* Static function: */
+/* Close the current (given index) socket, and remove it from the fds */
+void	Poll::close_fd(int i)
+{
+	close(fds[i].fd);
+	memset((void *) (fds + i), 0, sizeof(struct pollfd));
+	return ;
 }
 
 /* Static function: */
@@ -118,30 +127,14 @@ void	Poll::process(Connection &conn, struct addrinfo *res)
 			std::cout << "POLLIN: " << fds[i].fd << std::endl;
 
 			if (Connection::is_listen_sockfd(fds[i].fd))
-			{
-				conn.set_sockfd(accept(fds[i].fd, (struct sockaddr*) &res->ai_addr, &res->ai_addrlen));
-				if (conn.get_sockfd() < 0)
-					throw CustomException("Accept failure: " + std::string(strerror(errno)));
-				std::cout << conn.get_sockfd() << std::endl;
-				add_fd(conn.get_sockfd(), POLLIN | POLLPRI);
-			}
+				accept_sock(fds[i].fd, conn, res);
 			else
-			{
-				char	buffer[1024];
-				int		recvstat;
-
-				recvstat = recv(fds[i].fd, buffer, 1024 - 2, 0);
-				if (recvstat < 0)
-					throw CustomException("Recv failure: " + std::string(strerror(errno)));
-				buffer[recvstat] = 0;
-				conn.get_request()->set_data(conn.get_request()->get_data() + std::string(buffer));
-				std::cout << conn.get_request()->get_data() << std::endl;
-				update_fd(fds[i].fd, POLLIN | POLLPRI | POLLOUT | POLLWRBAND);
-			}
+				recv_data(fds[i].fd, conn);
 		}
 		else if (fds[i].revents & POLLOUT)
 		{
 			std::cout << "POLLOUT: " << fds[i].fd << std::endl;
+
 			if (conn.get_request()->get_data().length() == 0)
 				continue;
 
@@ -158,8 +151,7 @@ void	Poll::process(Connection &conn, struct addrinfo *res)
 			std::cout << "Response sent." << std::endl;
 
 			// CLOSE CONNECTION AND REMOVE FROM POLL FDS
-			close(fds[i].fd);
-			memset((void *) (fds + i), 0, sizeof(struct pollfd));
+			close_fd(i);
 			conn.set_sockfd(0);
 			conn.get_request()->set_data("");
 			continue;
@@ -168,7 +160,7 @@ void	Poll::process(Connection &conn, struct addrinfo *res)
 	return ;
 }
 
-/* Getter: return index of first empty struct in fds array */
+/* Static getter: return index of first empty struct in fds array */
 int	Poll::get_empty(void)
 {
 	int	i = 0;
@@ -177,7 +169,7 @@ int	Poll::get_empty(void)
 	return (i);
 }
 
-/* Getter: return index of given fd in fds array  */
+/* Static getter: return index of given fd in fds array  */
 int	Poll::get_fds_index(int fd)
 {
 	for (int i = 0; i < 1024; i++)
@@ -186,4 +178,31 @@ int	Poll::get_fds_index(int fd)
 			return (i);
 	}
 	return (-1);
+}
+
+/* Static function: accept an incoming connection request */
+void	Poll::accept_sock(int fd, Connection &conn, struct addrinfo *res)
+{
+	conn.set_sockfd(accept(fd, (struct sockaddr*) &res->ai_addr, &res->ai_addrlen));
+	if (conn.get_sockfd() < 0)
+		throw CustomException("Accept failure: " + std::string(strerror(errno)));
+	std::cout << conn.get_sockfd() << std::endl;
+	add_fd(conn.get_sockfd(), POLLIN | POLLPRI);
+	return ;
+}
+
+/* Static function: recv data from an incoming connection request */
+void	Poll::recv_data(int fd, Connection &conn)
+{
+	char	buffer[1024];
+	int		recvstat;
+
+	recvstat = recv(fd, buffer, 1024 - 2, 0);
+	if (recvstat < 0)
+		throw CustomException("Recv failure: " + std::string(strerror(errno)));
+	buffer[recvstat] = 0;
+	conn.get_request()->set_data(conn.get_request()->get_data() + std::string(buffer));
+	std::cout << conn.get_request()->get_data() << std::endl;
+	update_fd(fd, POLLIN | POLLPRI | POLLOUT | POLLWRBAND);
+	return ;
 }

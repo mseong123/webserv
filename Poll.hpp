@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:26:45 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/24 17:39:34 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/24 18:01:23 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ class	Poll
 		static bool	is_fds(int fd);
 		static int	add_fd(int fd, int ev);
 		static int	update_fd(int fd, int ev);
+		static void	close_fd(int i);
 
 		static int	check(void);
 		static void	process(Connection &conn, struct addrinfo *res);
@@ -37,6 +38,8 @@ class	Poll
 	private:
 		static int	get_empty(void);
 		static int	get_fds_index(int fd);
+		static void	accept_sock(int fd, Connection &conn, struct addrinfo *res);
+		static void	recv_data(int fd, Connection &conn);
 };
 
 #endif
