@@ -46,7 +46,7 @@ void HTTP::init(const std::string path) {
 	std::cout << "Listening on port " << sockfd << "." << std::endl;
 
 	// Add socket to vector of listening-only sockets
-	this->_listen.push_back(sockfd);
+	Connection::listen_sockfds.push_back(sockfd);
 
 	Poll			po;
 	int				polls;
@@ -66,7 +66,7 @@ void HTTP::init(const std::string path) {
 		std::cout << po << std::endl;
 
 		// CHECKS THROUGH ALL THE FDS IN THE POLL FDS ARRAY FOR REVENTS
-		po.process(conn, this->_listen, res);
+		po.process(conn, res);
 	}
 
 };
