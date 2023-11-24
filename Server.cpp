@@ -1,5 +1,7 @@
 #include "webserv.hpp"
 
+std::vector<std::pair<std::string, std::string> > Server::address;
+
 Server::Server() {
 }
 
@@ -44,5 +46,18 @@ void Server::set_server_name(std::string server_name) {
 
 void Server::set_client_max_body_size(std::string client_max_body_size) {
 	this->_client_max_body_size = client_max_body_size;
+}
+
+
+std::ostream & operator<<(std::ostream & out, std::vector<std::pair<std::string, std::string> > & address) {
+	std::vector<std::pair <std::string, std::string> >::iterator it = address.begin();
+	std::vector<std::pair <std::string, std::string> >::iterator ite = address.end();
+	
+	for (; it != ite; it++) {
+		out << "ADDRESS" << std::endl;
+		out << "host: " << it->first << std::endl;
+		out << "port: " << it->second << std::endl;
+	}
+	return out;
 }
 

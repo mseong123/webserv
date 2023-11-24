@@ -9,7 +9,9 @@ int main (int argc, char **argv) {
 			http.init(std::string(argv[1]));
 		else
 			throw CustomException("Incorrect number of arguments");
-		http.print_servers();
+		//std::cout << http.get_servers() << std::endl;
+		//std::cout << Server::address << std::endl;
+		
 	}
 	catch (CustomException & e) {
 		std::cout<< e.what() << std::endl;

@@ -18,7 +18,7 @@ class Server {
 		void set_port(std::string port);
 		void set_server_name(std::string server_name);
 		void set_client_max_body_size(std::string client_max_body_size);
-		
+		static std::vector<std::pair<std::string, std::string> > address;
 	private:
 		std::string _host;
 		std::string _port;
@@ -27,5 +27,7 @@ class Server {
 		std::map<std::string, std::string> _error_pages;
 		std::vector<Location> _location;
 };
+
+std::ostream & operator<<(std::ostream & out, std::vector<std::pair<std::string, std::string> > & address);
 
 #endif
