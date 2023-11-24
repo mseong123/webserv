@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:26:45 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/23 21:47:08 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/24 13:14:01 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class	Poll
 		void	set_fds(int i, int fd, int ev, int rev);
 
 		int		check(void);
-		void	process(Connection &conn, std::vector<int> listens, struct addrinfo *res);
+		void	process(Connection &conn, struct addrinfo *res);
 
 	private:
 		struct pollfd	_fds[1024];

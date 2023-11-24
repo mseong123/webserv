@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/23 21:49:14 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/24 13:13:46 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	Poll::check(void)
 }
 
 /* Goes through the _fds array and process each ready FD */
-void	Poll::process(Connection &conn, std::vector<int> listens, struct addrinfo *res)
+void	Poll::process(Connection &conn, struct addrinfo *res)
 {
 	for (int i = 0; i < 1024; i++)
 	{
@@ -70,20 +70,7 @@ void	Poll::process(Connection &conn, std::vector<int> listens, struct addrinfo *
 		{
 			std::cout << "POLLIN: " << this->_fds[i].fd << std::endl;
 
-			// THIS PART CHECKS IF THE SOCKET IS A LISTENING-ONLY SOCKET
-			// SHOULD BE A UTILITY FUNCTION
-			// IF TRUE, CREATE NEW CONNECTION
-			bool	connect = false;
-			for (std::vector<int>::iterator it = listens.begin(); it != listens.end(); it++)
-			{
-				if (*it == this->_fds[i].fd)
-				{
-					connect = true;
-					break;
-				}
-			}
-
-			if (connect == true)
+			if (Connection::is_listen_sockfd(this->_fds[i].fd))
 			{
 				conn.set_sockfd(accept(this->_fds[i].fd, (struct sockaddr*) &res->ai_addr, &res->ai_addrlen));
 				if (conn.get_sockfd() < 0)
