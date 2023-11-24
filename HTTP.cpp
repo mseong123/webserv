@@ -25,28 +25,18 @@ void HTTP::init(const std::string path) {
 	struct addrinfo	res;
 
 	sockfd = Connection::serv_listen(serv.get_host(), serv.get_port(), &res);
+	Poll::add_fd(sockfd, POLLIN | POLLPRI);
 
-	Poll			po;
-	int				polls;
+	Poll::put_fds();
+
 	Connection		conn;
-	socklen_t		addrlen;
 
-	po.set_fds(0, sockfd, POLLIN | POLLPRI, 0);
 	while (true)
 	{
-		polls = po.check();
-		if (polls < 0)
-			throw CustomException("Poll failure: " + std::string(strerror(errno)));
-		if (polls == 0)
+		if (Poll::check() == 0)
 			continue;
-
-		// THIS PART JUST PRINTS OUT THE FDS IN THE POLL FDS ARRAY
-		std::cout << po << std::endl;
-
-		// CHECKS THROUGH ALL THE FDS IN THE POLL FDS ARRAY FOR REVENTS
-		po.process(conn, &res);
+		Poll::process(conn, &res);
 	}
-
 };
 
 std::vector<Server> & HTTP::get_server() {
