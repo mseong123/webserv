@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:37:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/24 09:17:07 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/24 14:15:27 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ class	Connection
 		static std::vector<int>	listen_sockfds;
 
 		static bool	is_listen_sockfd(int fd);
+		static int	serv_listen(std::string host, std::string port, struct addrinfo *res);
 
 		Connection(void);
 		Connection(Connection const &cls);
