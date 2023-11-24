@@ -1,21 +1,35 @@
+server {
+	listen localhost:80;
+	location /{
 
+	}
+	location /{
 
-
-server{
-	error_pages 102 /404.;
-	location/ {
-		index /html;
 	}
 
-
-
 	
+}
+server {
+	listen 127.0.0.1:80;
+	location /{
 
-} server {
-	listen 		0.0.0:50;
-	client_max_body_size 1;
-	client_max_body_size 1;
-}      
+	}
+	
+}      server {
+	listen 127.0.0.1:80;
+	location /{
+
+	}
+	
+}  
+server {
+	listen  localhosta:80;
+	location /{
+
+	}
+	
+}  
+
 
 
 

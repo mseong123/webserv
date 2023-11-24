@@ -24,6 +24,25 @@ void ConfigServer::check_semicolon(size_t *pos, std::string keyword, std::string
 		throw CustomException("CONFIG_FILE_ERROR: no semicolon in " + keyword + " directive");
 }
 
+void ConfigServer::parse_address(Server & server) {
+	std::string host = server.get_host();
+	std::string port = server.get_port();
+	
+	if (Server::address.size() == 0)
+		Server::address.push_back(std::pair<std::string, std::string>(host,port));
+	else {
+		std::vector<std::pair<std::string, std::string> >::iterator it = Server::address.begin();
+		std::vector<std::pair<std::string, std::string> >::iterator ite = Server::address.end();
+		int duplicate = 0;
+		for (; it != ite; it++) {
+			if (it->first == host && it->second == port)
+				duplicate = 1;
+		}
+		if (!duplicate)
+			Server::address.push_back(std::pair<std::string, std::string>(host,port));
+	}
+}
+
 void ConfigServer::parse_listen(size_t *pos, Server & server, std::string file_content) {
 	size_t temp_pos = *pos;
 
@@ -43,7 +62,7 @@ void ConfigServer::parse_listen(size_t *pos, Server & server, std::string file_c
 				if (host_delim_pos == 0) 
 					server.set_host("0.0.0.0");
 				else {
-					if (host_port_value.substr(0, host_delim_pos).find_first_not_of("0123456789.") != std::string::npos)
+					if (host_port_value.substr(0, host_delim_pos).find_first_not_of("0123456789.abcdefghijklmnopqrstuvwxyz") != std::string::npos)
 						throw CustomException("CONFIG_FILE_ERROR: Incorrect host in listen directive");
 					else
 						server.set_host(host_port_value.substr(0, host_delim_pos));
@@ -63,30 +82,31 @@ void ConfigServer::parse_listen(size_t *pos, Server & server, std::string file_c
 		}
 	}
 	this->check_semicolon(pos, "listen", file_content);
+	this->parse_address(server);
 }
 
-void ConfigServer::parse_server_names(size_t *pos, Server & server, std::string file_content) {
+void ConfigServer::parse_server_name(size_t *pos, Server & server, std::string file_content) {
 	size_t temp_pos = *pos;
 
 	parse_whitespace(pos, file_content);
 	if (temp_pos == *pos)
-		throw CustomException("CONFIG_FILE_ERROR: Need whitespace after server_names keyword");
+		throw CustomException("CONFIG_FILE_ERROR: Need whitespace after server_name keyword");
 
 	if (file_content[*pos] == ';') 
-		throw CustomException("CONFIG_FILE_ERROR: Need a value in server_names directive");
+		throw CustomException("CONFIG_FILE_ERROR: Need a value in server_name directive");
 	else {
 		temp_pos = file_content.find_first_of(";", *pos);
 		if (temp_pos != std::string::npos)
 		{
 			if (file_content.substr(*pos, temp_pos - *pos).find_first_not_of("abcdefghijklmnopqrstuvwxyz0123456789._") != std::string::npos)
-				throw CustomException("CONFIG_FILE_ERROR: Incorrect server_names value");
+				throw CustomException("CONFIG_FILE_ERROR: Incorrect server_name value");
 			else {
-				server.set_server_names(file_content.substr(*pos, temp_pos - *pos));
+				server.set_server_name(file_content.substr(*pos, temp_pos - *pos));
 				*pos = temp_pos;
 			}
 		}
 	}
-	this->check_semicolon(pos, "server_names", file_content);
+	this->check_semicolon(pos, "server_name", file_content);
 }
 
 void ConfigServer::parse_client_max_body_size(size_t *pos, Server & server, std::string file_content) {
@@ -169,9 +189,9 @@ void ConfigServer::parse_server_block(size_t *pos, std::vector<Server> & _server
 				*pos += 6;
 				this->parse_listen(pos, server, file_content);
 			}
-		else if (file_content.substr(*pos, 12) == "server_names") {
+		else if (file_content.substr(*pos, 12) == "server_name") {
 				*pos += 12;
-				this->parse_server_names(pos, server, file_content);
+				this->parse_server_name(pos, server, file_content);
 			}
 		else if (file_content.substr(*pos, 20) == "client_max_body_size") {
 				*pos += 20;
@@ -198,6 +218,12 @@ void ConfigServer::parse_server_block(size_t *pos, std::vector<Server> & _server
 	
 	if (!closing_bracket)
 		throw CustomException("CONFIG_FILE_ERROR: missing } in server block");
+	if (server.get_host() == "")
+		throw CustomException("CONFIG_FILE_ERROR: server block needs listen directive");
+	if (server.get_location().size() == 0)
+		throw CustomException("CONFIG_FILE_ERROR: server block needs at least one location block");
 	_server.push_back(server);
 }
+
+
 
