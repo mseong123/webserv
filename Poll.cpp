@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/24 13:13:46 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/24 14:12:42 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	Poll::set_fds(int i, int fd, int ev, int rev)
 /* Polls through the _fds array for ready FDs */
 int	Poll::check(void)
 {
-	return (poll(this->_fds, 1024, 10000));
+	return (poll(this->_fds, 1024, -1));
 }
 
 /* Goes through the _fds array and process each ready FD */
@@ -76,7 +76,7 @@ void	Poll::process(Connection &conn, struct addrinfo *res)
 				if (conn.get_sockfd() < 0)
 					throw CustomException("Accept failure: " + std::string(strerror(errno)));
 				std::cout << conn.get_sockfd() << std::endl;
-				this->set_fds(this->get_empty(), conn.get_sockfd(), POLLIN | POLLPRI | POLLOUT | POLLWRBAND, 0);
+				this->set_fds(this->get_empty(), conn.get_sockfd(), POLLIN | POLLPRI, 0);
 			}
 			else
 			{
@@ -89,6 +89,7 @@ void	Poll::process(Connection &conn, struct addrinfo *res)
 				buffer[recvstat] = 0;
 				conn.get_request()->set_data(conn.get_request()->get_data() + std::string(buffer));
 				std::cout << conn.get_request()->get_data() << std::endl;
+				this->set_fds(i, this->_fds[i].fd, POLLOUT | POLLWRBAND, 0);
 			}
 		}
 		else if (this->_fds[i].revents & POLLOUT)
