@@ -65,28 +65,28 @@ void ConfigServer::parse_listen(size_t *pos, Server & server, std::string file_c
 	this->check_semicolon(pos, "listen", file_content);
 }
 
-void ConfigServer::parse_server_names(size_t *pos, Server & server, std::string file_content) {
+void ConfigServer::parse_server_name(size_t *pos, Server & server, std::string file_content) {
 	size_t temp_pos = *pos;
 
 	parse_whitespace(pos, file_content);
 	if (temp_pos == *pos)
-		throw CustomException("CONFIG_FILE_ERROR: Need whitespace after server_names keyword");
+		throw CustomException("CONFIG_FILE_ERROR: Need whitespace after server_name keyword");
 
 	if (file_content[*pos] == ';') 
-		throw CustomException("CONFIG_FILE_ERROR: Need a value in server_names directive");
+		throw CustomException("CONFIG_FILE_ERROR: Need a value in server_name directive");
 	else {
 		temp_pos = file_content.find_first_of(";", *pos);
 		if (temp_pos != std::string::npos)
 		{
 			if (file_content.substr(*pos, temp_pos - *pos).find_first_not_of("abcdefghijklmnopqrstuvwxyz0123456789._") != std::string::npos)
-				throw CustomException("CONFIG_FILE_ERROR: Incorrect server_names value");
+				throw CustomException("CONFIG_FILE_ERROR: Incorrect server_name value");
 			else {
-				server.set_server_names(file_content.substr(*pos, temp_pos - *pos));
+				server.set_server_name(file_content.substr(*pos, temp_pos - *pos));
 				*pos = temp_pos;
 			}
 		}
 	}
-	this->check_semicolon(pos, "server_names", file_content);
+	this->check_semicolon(pos, "server_name", file_content);
 }
 
 void ConfigServer::parse_client_max_body_size(size_t *pos, Server & server, std::string file_content) {
@@ -169,9 +169,9 @@ void ConfigServer::parse_server_block(size_t *pos, std::vector<Server> & _server
 				*pos += 6;
 				this->parse_listen(pos, server, file_content);
 			}
-		else if (file_content.substr(*pos, 12) == "server_names") {
+		else if (file_content.substr(*pos, 12) == "server_name") {
 				*pos += 12;
-				this->parse_server_names(pos, server, file_content);
+				this->parse_server_name(pos, server, file_content);
 			}
 		else if (file_content.substr(*pos, 20) == "client_max_body_size") {
 				*pos += 20;

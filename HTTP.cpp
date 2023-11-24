@@ -27,7 +27,7 @@ void HTTP::print_servers() {
 		std::cout << "============" << std::endl;
 		std::cout<< "host: " <<_servers[server_i].get_host() << std::endl;
 		std::cout<< "port: " << _servers[server_i].get_port() << std::endl;
-		std::cout<< "server_names: " <<_servers[server_i].get_server_names() << std::endl;
+		std::cout<< "server_name: " <<_servers[server_i].get_server_name() << std::endl;
 		std::cout<< "client_max_body_size: " <<_servers[server_i].get_client_max_body_size() << std::endl;
 		std::cout<< "error_pages: " << std::endl;
 		std::map<std::string, std::string>::iterator it = _servers[server_i].get_error_pages().begin();
