@@ -6,11 +6,27 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:42:10 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/21 19:03:22 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/24 09:17:15 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserv.hpp"
+
+/* Static member attributes initiations */
+std::vector<int>	Connection::listen_sockfds;
+
+/* Getter: returns true if given sockfd is in the listen-only sockFD vector */
+bool	Connection::is_listen_sockfd(int fd)
+{
+	std::vector<int>::iterator 	it;
+
+	for (it = listen_sockfds.begin(); it != listen_sockfds.end(); it++)
+	{
+		if (*it == fd)
+			return (true);
+	}
+	return (false);
+}
 
 /* Default constructor */
 Connection::Connection(void) : _sockfd(0), 
