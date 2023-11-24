@@ -1,0 +1,36 @@
+server {
+	listen localhost:80;
+	location /{
+
+	}
+	location /{
+
+	}
+
+	
+}
+server {
+	listen 127.0.0.1:80;
+	location /{
+
+	}
+	
+}      server {
+	listen 127.0.0.1:80;
+	location /{
+
+	}
+	
+}  
+server {
+	listen  localhosta:80;
+	location /{
+
+	}
+	
+}  
+
+
+
+
+

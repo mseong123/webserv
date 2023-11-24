@@ -16,6 +16,8 @@
 // class headers
 # include "CustomException.hpp"
 # include "Config.hpp"
+# include "ConfigServer.hpp"
+# include "ConfigLocation.hpp"
 # include "HTTP.hpp"
 # include "Server.hpp"
 # include "Location.hpp"
@@ -23,6 +25,6 @@
 # include "Connection.hpp"
 # include "Poll.hpp"
 
-# define DEFAULT_CONFIG "default_config.txt"
+# define DEFAULT_CONFIG "default_config"
 
 #endif
