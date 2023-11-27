@@ -10,31 +10,26 @@ void HTTP::init(const std::string path) {
 	Config config(path);
 	config.parse_file(this->get_servers());
 
-	Server	serv;
-	serv.set_host("127.0.0.1");
-	serv.set_port("8880");
-	serv.set_server_name("localhost");
-
-	std::cout << serv.get_host() << std::endl;
-	std::cout << serv.get_port() << std::endl;
-	std::cout << serv.get_server_name() << std::endl;
-
 	int				sockfd;
 	struct addrinfo	res;
 
-	sockfd = Connection::serv_listen(serv.get_host(), serv.get_port(), &res);
-	Poll::add_fd(sockfd, POLLIN | POLLPRI);
+	std::vector< std::pair<std::string, std::string> >::iterator it;
+	for (it = Server::address.begin(); it != Server::address.end(); it++)
+	{
+		std::cout << it->first << ":" << it->second << std::endl;
+		sockfd = Connection::serv_listen(it->first, it->second, &res);
+		Poll::add_fd(sockfd, POLLIN | POLLPRI);
+	}
 
 	Poll::put_fds();
-
-	Connection		conn;
 
 	while (true)
 	{
 		if (Poll::check() == 0)
 			continue;
-		Poll::process(conn, &res);
+		Poll::process(&res);
 	}
+	return ;
 };
 
 std::vector<Server> & HTTP::get_servers() {
