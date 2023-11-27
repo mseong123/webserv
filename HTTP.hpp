@@ -11,7 +11,6 @@ class HTTP {
 		void init(const std::string path);
 	private:
 		std::vector<Server> 	_server;
-		std::vector<Connection>	_conn;	
 };
 
 std::ostream & operator<<(std::ostream & out, std::vector<Server> & servers);
