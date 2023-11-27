@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:37:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/24 14:15:27 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/27 12:12:03 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,10 @@ class	Connection
 {
 	public:
 		static std::vector<int>	listen_sockfds;
+		static std::vector<Connection>	io_conn;
 
 		static bool	is_listen_sockfd(int fd);
+		static int	get_conn_index(int sockfd);
 		static int	serv_listen(std::string host, std::string port, struct addrinfo *res);
 
 		Connection(void);
@@ -43,5 +45,7 @@ class	Connection
 		Request		*_request;
 		Response	*_response;
 };
+
+std::ostream	&operator<<(std::ostream &out, std::vector<Connection> &conn);
 
 #endif

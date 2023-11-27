@@ -6,14 +6,15 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:42:10 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/27 10:21:40 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/27 12:27:41 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserv.hpp"
 
 /* Static member attributes initiations */
-std::vector<int>	Connection::listen_sockfds;
+std::vector<int>		Connection::listen_sockfds;
+std::vector<Connection>	Connection::io_conn;
 
 /* Static getter: */
 /* returns true if given sockfd is in the listen-only sockFD vector */
@@ -27,6 +28,19 @@ bool	Connection::is_listen_sockfd(int fd)
 			return (true);
 	}
 	return (false);
+}
+
+/* Static getter: */
+/* returns the index of io_conn containing the instance of a Connection with */
+/* the given sockfd */
+int	Connection::get_conn_index(int sockfd)
+{
+	for (unsigned long i = 0; i < io_conn.size(); i++)
+	{
+		if (io_conn.at(i)._sockfd == sockfd)
+			return (i);
+	}
+	throw CustomException("Unknown connection!");
 }
 
 /* Static function: */
@@ -135,4 +149,18 @@ void	Connection::set_response(Response *response)
 {
 	this->_response = response;
 	return ;
+}
+
+/* Insertion operator overload: vector of Connection objects */
+std::ostream	&operator<<(std::ostream &out, std::vector<Connection> &conn)
+{
+	for (unsigned long i = 0; i < conn.size(); i++)
+	{
+		if (i == 0)
+			out << "Socket FDs: ";
+		else
+			out << " ";
+		out << conn.at(i).get_sockfd();
+	}
+	return (out);
 }
