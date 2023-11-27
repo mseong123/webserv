@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:42:10 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/24 14:15:57 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/27 10:21:40 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	Connection::serv_listen(std::string host, std::string port, struct addrinfo 
 	hint.ai_protocol = 0;
 	hint.ai_socktype = SOCK_STREAM;
 	hint.ai_flags = AI_NUMERICSERV;
-	if (getaddrinfo(host.c_str(), port.c_str(), &hint, &res) < 0)
+	if (getaddrinfo(host.c_str(), port.c_str(), &hint, &res) != 0)
 		throw CustomException("Getaddrinfo failure: " + std::string(gai_strerror(errno)));
 	if (bind(sockfd, res->ai_addr, res->ai_addrlen) < 0)
 		throw CustomException("Bind failure: " + std::string(strerror(errno)));
