@@ -10,7 +10,7 @@ server {
 	
 }
 server {
-	listen 127.0.0.1:80;
+	listen       127.0.0.1:80000;
 	location /{
 
 	}
