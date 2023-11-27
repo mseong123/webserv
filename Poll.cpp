@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/24 18:03:08 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/27 12:35:50 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ Poll const	&Poll::operator=(Poll const &cls)
 }
 
 /* Goes through the _fds array and process each ready FD */
-void	Poll::process(Connection &conn, struct addrinfo *res)
+void	Poll::process(struct addrinfo *res)
 {
 	for (int i = 0; i < 1024; i++)
 	{
@@ -127,12 +127,23 @@ void	Poll::process(Connection &conn, struct addrinfo *res)
 			std::cout << "POLLIN: " << fds[i].fd << std::endl;
 
 			if (Connection::is_listen_sockfd(fds[i].fd))
-				accept_sock(fds[i].fd, conn, res);
+			{
+				Connection	*conn = new Connection;
+				accept_sock(fds[i].fd, *conn, res);
+				Connection::io_conn.push_back(*conn);
+			}
 			else
+			{
+				int	conn_index = Connection::get_conn_index(fds[i].fd);
+				Connection &conn = Connection::io_conn.at(conn_index);
 				recv_data(fds[i].fd, conn);
+			}
 		}
 		else if (fds[i].revents & POLLOUT)
 		{
+			int			conn_index = Connection::get_conn_index(fds[i].fd);
+			Connection	&conn = Connection::io_conn.at(conn_index);
+
 			std::cout << "POLLOUT: " << fds[i].fd << std::endl;
 
 			if (conn.get_request()->get_data().length() == 0)
@@ -154,6 +165,7 @@ void	Poll::process(Connection &conn, struct addrinfo *res)
 			close_fd(i);
 			conn.set_sockfd(0);
 			conn.get_request()->set_data("");
+			Connection::io_conn.erase(Connection::io_conn.begin()+conn_index);
 			continue;
 		}
 	}
@@ -194,10 +206,10 @@ void	Poll::accept_sock(int fd, Connection &conn, struct addrinfo *res)
 /* Static function: recv data from an incoming connection request */
 void	Poll::recv_data(int fd, Connection &conn)
 {
-	char	buffer[1024];
+	char	buffer[RECV_BUFFER_SIZE];
 	int		recvstat;
 
-	recvstat = recv(fd, buffer, 1024 - 2, 0);
+	recvstat = recv(fd, buffer, RECV_BUFFER_SIZE - 2, 0);
 	if (recvstat < 0)
 		throw CustomException("Recv failure: " + std::string(strerror(errno)));
 	buffer[recvstat] = 0;

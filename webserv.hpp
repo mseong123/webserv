@@ -26,5 +26,6 @@
 # include "Poll.hpp"
 
 # define DEFAULT_CONFIG "default_config"
+# define RECV_BUFFER_SIZE 1024
 
 #endif

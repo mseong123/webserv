@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:26:45 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/24 18:01:23 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/27 11:29:08 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ class	Poll
 		static void	close_fd(int i);
 
 		static int	check(void);
-		static void	process(Connection &conn, struct addrinfo *res);
+		static void	process(struct addrinfo *res);
 
 		Poll(void);
 		Poll(Poll const &cls);
