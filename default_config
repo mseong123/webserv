@@ -1,5 +1,5 @@
 server {
-	listen localhost:80;
+	listen localhost:8009;
 	location /{
 
 	}
@@ -10,25 +10,19 @@ server {
 	
 }
 server {
-	listen       127.0.0.1:80000;
+	listen       127.0.0.1:8011;
 	location /{
 
 	}
 	
 }      server {
-	listen 127.0.0.1:80;
+	listen 127.0.0.1:8008;
 	location /{
 
 	}
 	
 }  
-server {
-	listen  localhosta:80;
-	location /{
 
-	}
-	
-}  
 
 
 

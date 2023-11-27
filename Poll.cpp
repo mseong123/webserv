@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Poll.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
+/*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/27 12:35:50 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/27 19:06:25 by melee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,8 @@ void	Poll::process(struct addrinfo *res)
 			if (conn.get_request()->get_data().length() == 0)
 				continue;
 
+			conn.get_request()->parse_request_data();
+			std::cout << *(conn.get_request()) << std::endl;
 			std::string	servMsg;
 
 			servMsg = "HTTP/1.1 200 \r\nContent-Type: text/html\r\n";
