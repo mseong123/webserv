@@ -21,7 +21,7 @@ void HTTP::init(const std::string path) {
 		Poll::add_fd(sockfd, POLLIN | POLLPRI);
 	}
 
-	Poll::put_fds();
+	std::cout << Poll::fds << std::endl;
 
 	while (true)
 	{
