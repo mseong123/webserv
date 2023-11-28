@@ -6,76 +6,25 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/27 12:35:50 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/28 14:38:54 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserv.hpp"
 
 /* Initialisation for static attributes */
-struct pollfd	Poll::fds[1024];
-
-/* Static Getter: */
-/* Display all non-zero fds in fds */
-void	Poll::put_fds(void)
-{
-	std::cout << "Poll FDs: ";
-	for (int i = 0; i < 1024; i++)
-	{
-		if (fds[i].fd != 0)
-			std::cout << fds[i].fd << " ";
-	}
-	std::cout << std::endl;
-	return ;
-}
-
-/* Static function: */
-/* Returns true if fds is a member of the array */
-bool	Poll::is_fds(int fd)
-{
-	for (int i = 0; i < 1024; i++)
-	{
-		if (fds[i].fd == fd)
-			return (true);
-	}
-	return (false);
-}
+std::vector<struct pollfd>	Poll::fds;
 
 /* Static function: */
 /* Adds data to fds */
-int	Poll::add_fd(int fd, int ev)
+void	Poll::add_fd(int fd, int ev)
 {
-	int	i;
+	struct pollfd	newfd;
 
-	i = get_empty();
-	if (i == 1024)
-		return (-1);
-	fds[i].fd = fd;
-	fds[i].events = ev;
-	fds[i].revents = 0;
-	return (0);
-}
-
-/* Static function: */
-/* Update the values of a struct */
-int	Poll::update_fd(int fd, int ev)
-{
-	int	i;
-
-	i = get_fds_index(fd);
-	if (i < 0)
-		throw CustomException("Poll::update_fd() failure: fd not in Poll::fds");
-	fds[i].events = ev;
-	fds[i].revents = 0;
-	return (0);
-}
-
-/* Static function: */
-/* Close the current (given index) socket, and remove it from the fds */
-void	Poll::close_fd(int i)
-{
-	close(fds[i].fd);
-	memset((void *) (fds + i), 0, sizeof(struct pollfd));
+	memset(&newfd, 0, sizeof(newfd));
+	newfd.fd = fd;
+	newfd.events = ev;
+	fds.push_back(newfd);
 	return ;
 }
 
@@ -85,66 +34,40 @@ int	Poll::check(void)
 {
 	int	polls;
 
-	polls = poll(fds, 1024, -1);
+	polls = poll(fds.data(), fds.size(), -1);
 	if (polls < 0)
 		throw CustomException("Poll failure: " + std::string(strerror(errno)));
 	return (polls);
 }
 
-/* Default constructor - DOES NOTHING */
-Poll::Poll(void)
-{
-	return ;
-}
-
-/* Copy constructor - DOES NOTHING */
-Poll::Poll(Poll const &cls)
-{
-	(void) cls;
-	return ;
-}
-
-/* Destructor - DOES NOTHING */
-Poll::~Poll(void)
-{
-	return ;
-}
-
-/* Assignment operator overload - DOES NOTHING */
-Poll const	&Poll::operator=(Poll const &cls)
-{
-	(void) cls;
-	return (*this);
-}
-
-/* Goes through the _fds array and process each ready FD */
+/* Goes through fds and process each ready FD */
 void	Poll::process(struct addrinfo *res)
 {
-	for (int i = 0; i < 1024; i++)
+	for (size_t i = 0; i < fds.size(); i++)
 	{
-		if (fds[i].revents & POLLIN)
+		if (fds.at(i).revents & POLLIN)
 		{
-			std::cout << "POLLIN: " << fds[i].fd << std::endl;
+			std::cout << "POLLIN: " << fds.at(i).fd << std::endl;
 
-			if (Connection::is_listen_sockfd(fds[i].fd))
+			if (Connection::is_listen_sockfd(fds.at(i).fd))
 			{
 				Connection	*conn = new Connection;
-				accept_sock(fds[i].fd, *conn, res);
+				accept_sock(fds.at(i).fd, *conn, res);
 				Connection::io_conn.push_back(*conn);
 			}
 			else
 			{
-				int	conn_index = Connection::get_conn_index(fds[i].fd);
-				Connection &conn = Connection::io_conn.at(conn_index);
-				recv_data(fds[i].fd, conn);
+				int			conn_ind = Connection::get_conn_index(fds.at(i).fd);
+				Connection	&conn = Connection::io_conn.at(conn_ind);
+				recv_data(fds.at(i).fd, conn);
 			}
 		}
-		else if (fds[i].revents & POLLOUT)
+		else if (fds.at(i).revents & POLLOUT)
 		{
-			int			conn_index = Connection::get_conn_index(fds[i].fd);
-			Connection	&conn = Connection::io_conn.at(conn_index);
+			int			conn_ind = Connection::get_conn_index(fds.at(i).fd);
+			Connection	&conn = Connection::io_conn.at(conn_ind);
 
-			std::cout << "POLLOUT: " << fds[i].fd << std::endl;
+			std::cout << "POLLOUT: " << fds.at(i).fd << std::endl;
 
 			if (conn.get_request()->get_data().length() == 0)
 				continue;
@@ -157,39 +80,64 @@ void	Poll::process(struct addrinfo *res)
 			servMsg = servMsg + "</header><body><p>You did it!</p>";
 			servMsg = servMsg + "</body></html>";
 
-			if (send(fds[i].fd, servMsg.c_str(), servMsg.length(), 0) < 0)
+			if (send(fds.at(i).fd, servMsg.c_str(), servMsg.length(), 0) < 0)
 				throw CustomException("Send failure: " + std::string(strerror(errno)));
 			std::cout << "Response sent." << std::endl;
 
-			// CLOSE CONNECTION AND REMOVE FROM POLL FDS
 			close_fd(i);
-			conn.set_sockfd(0);
-			conn.get_request()->set_data("");
-			Connection::io_conn.erase(Connection::io_conn.begin()+conn_index);
 			continue;
 		}
 	}
 	return ;
 }
 
-/* Static getter: return index of first empty struct in fds array */
-int	Poll::get_empty(void)
+/* Destructor - DOES NOTHING */
+Poll::~Poll(void)
 {
-	int	i = 0;
-	while (fds[i].fd != 0)
-		i++;
-	return (i);
+	return ;
 }
 
-/* Static getter: return index of given fd in fds array  */
-int	Poll::get_fds_index(int fd)
+/* Static function: */
+/* Returns true if fds is a member of the array */
+bool	Poll::is_fds(int fd)
 {
-	for (int i = 0; i < 1024; i++)
+	for (size_t i = 0; i < fds.size(); i++)
 	{
-		if (fds[i].fd == fd)
-			return (i);
+		if (fds.at(i).fd == fd)
+			return (true);
 	}
-	return (-1);
+	return (false);
+}
+
+/* Static function: */
+/* Update the values of a struct */
+void	Poll::update_fd(int fd, int ev)
+{
+	for (size_t i = 0; i < fds.size(); i++)
+	{
+		if (fds.at(i).fd == fd)
+		{
+			fds.at(i).events = ev;
+			fds.at(i).revents = 0;
+			return ;
+		}
+	}
+	throw CustomException("Update Poll FD failure: Unknown Socket");
+}
+
+/* Static function: */
+/* Close the current (given index) socket, and remove it from the fds */
+void	Poll::close_fd(int i)
+{
+	int			conn_ind = Connection::get_conn_index(fds.at(i).fd);
+	Connection	&conn = Connection::io_conn.at(i);
+
+	conn.set_sockfd(0);
+	conn.get_request()->set_data("");
+	Connection::io_conn.erase(Connection::io_conn.begin() + conn_ind);
+	close(fds.at(i).fd);
+	fds.erase(fds.begin() + i);
+	return ;
 }
 
 /* Static function: accept an incoming connection request */
@@ -217,4 +165,38 @@ void	Poll::recv_data(int fd, Connection &conn)
 	std::cout << conn.get_request()->get_data() << std::endl;
 	update_fd(fd, POLLIN | POLLPRI | POLLOUT | POLLWRBAND);
 	return ;
+}
+
+/* Default constructor - DOES NOTHING */
+/* IS PRIVATE as the Poll class is not supposed to be instantiated */
+Poll::Poll(void)
+{
+	return ;
+}
+
+/* Copy constructor - DOES NOTHING */
+/* IS PRIVATE as the Poll class is not supposed to be instantiated */
+Poll::Poll(Poll const &cls)
+{
+	(void) cls;
+	return ;
+}
+
+/* Assignment operator overload - DOES NOTHING */
+/* IS PRIVATE as the Poll class is not supposed to be instantiated */
+Poll const	&Poll::operator=(Poll const &cls)
+{
+	(void) cls;
+	return (*this);
+}
+
+/* Insertion operator overload (Vector of pollfd structs) */
+/* Displays all fd value in each struct */
+std::ostream	&operator<<(std::ostream &out, std::vector<struct pollfd> &v)
+{
+	out << "Poll FDs: ";
+	for (size_t i = 0; i < v.size(); i++)
+		out << v.at(i).fd << " ";
+	out << std::endl;
+	return (out);
 }
