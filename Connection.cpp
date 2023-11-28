@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:42:10 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/27 12:27:41 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/28 15:54:48 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,6 @@ Connection::~Connection(void)
 {
 	delete this->_request;
 	delete this->_response;
-	// remove sockfd from poll fds
-	close(this->_sockfd);
 	return ;
 }
 

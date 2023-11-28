@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/28 15:15:29 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/28 15:56:08 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ void	Poll::update_fd(int fd, int ev)
 void	Poll::close_fd(int i)
 {
 	int			conn_ind = Connection::get_conn_index(fds.at(i).fd);
-	Connection	&conn = Connection::io_conn.at(i);
+	Connection	&conn = Connection::io_conn.at(conn_ind);
 
 	conn.set_sockfd(0);
 	conn.get_request()->set_data("");
