@@ -10,7 +10,7 @@ int main (int argc, char **argv) {
 		else
 			throw CustomException("Incorrect number of arguments");
 		//std::cout << http.get_servers() << std::endl;
-		//std::cout << Server::address << std::endl;
+		std::cout << Server::address << std::endl;
 		
 	}
 	catch (CustomException & e) {
