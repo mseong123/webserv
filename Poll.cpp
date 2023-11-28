@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/27 12:35:50 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/28 14:38:54 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void	Poll::update_fd(int fd, int ev)
 /* Close the current (given index) socket, and remove it from the fds */
 void	Poll::close_fd(int i)
 {
-	int			conn_ind = Connection::get_socket_index(fds.at(i).fd);
+	int			conn_ind = Connection::get_conn_index(fds.at(i).fd);
 	Connection	&conn = Connection::io_conn.at(i);
 
 	conn.set_sockfd(0);
@@ -198,5 +198,5 @@ std::ostream	&operator<<(std::ostream &out, std::vector<struct pollfd> &v)
 	for (size_t i = 0; i < v.size(); i++)
 		out << v.at(i).fd << " ";
 	out << std::endl;
-	return ;
+	return (out);
 }
