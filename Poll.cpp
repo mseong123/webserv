@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/28 14:38:54 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/28 15:15:29 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	Poll::check(void)
 }
 
 /* Goes through fds and process each ready FD */
-void	Poll::process(struct addrinfo *res)
+void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks)
 {
 	for (size_t i = 0; i < fds.size(); i++)
 	{
@@ -51,7 +51,20 @@ void	Poll::process(struct addrinfo *res)
 
 			if (Connection::is_listen_sockfd(fds.at(i).fd))
 			{
-				Connection	*conn = new Connection;
+				struct addrinfo	*res;
+				Connection		*conn = new Connection;
+
+				res = NULL;
+				for (size_t i = 0; i < socks.size(); i++)
+				{
+					if (socks.at(i).first == fds.at(i).fd)
+					{
+						res = &(socks.at(i).second);
+						break ;
+					}
+				}
+				if (res == NULL)
+					throw CustomException("Accept failure: unknown listening FD");
 				accept_sock(fds.at(i).fd, *conn, res);
 				Connection::io_conn.push_back(*conn);
 			}
