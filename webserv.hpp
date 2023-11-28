@@ -12,6 +12,7 @@
 # include <vector>
 # include <map>
 # include <algorithm>
+# include <stdio.h>
 
 // class headers
 # include "CustomException.hpp"

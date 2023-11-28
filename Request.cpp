@@ -6,7 +6,7 @@
 /*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 16:28:40 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/27 19:14:46 by melee            ###   ########.fr       */
+/*   Updated: 2023/11/28 12:14:26 by melee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ void		Request::parse_header_fields(size_t *pos)
 	size_t endline_delimiter = 0;
 	size_t temp_pos = 0;
 	
-	while (this->_data[*pos] != '\r') {
+	while (this->_data[*pos] != '\r' && *pos < this->_data.length()) {
 		std::pair<std::string, std::string> _pair;
 		temp_pos = this->_data.find_first_of(":", *pos);
 		_pair.first = this->_data.substr(*pos, temp_pos - *pos);
@@ -141,9 +141,12 @@ void		Request::parse_header_fields(size_t *pos)
 void		Request::parse_message_body(size_t *pos)
 {
 	if (this->_content_length != "") {
-		
 		*pos += 2;
-		size_t temp_pos = this->_data.find_first_of("\n", *pos);
+		size_t temp_pos = 0;
+		uint64_t content_length = std::stoll(this->_content_length);
+		while (content_length > 0) {
+			content_length--;
+		}
 		this->_message_body = this->_data.substr(*pos, temp_pos - *pos);
 	}
 }
