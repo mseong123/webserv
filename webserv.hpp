@@ -23,8 +23,10 @@
 # include "Server.hpp"
 # include "Location.hpp"
 # include "Request.hpp"
+# include "Response.hpp"
 # include "Connection.hpp"
 # include "Poll.hpp"
+
 
 # define DEFAULT_CONFIG "default_config"
 # define RECV_BUFFER_SIZE 1024

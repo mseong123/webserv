@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Poll.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
+/*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:26:45 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/28 15:13:37 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/28 18:53:31 by melee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ class	Poll
 
 		static void	add_fd(int fd, int ev);
 		static int	check(void);
-		static void	process(std::vector < std::pair<int, struct addrinfo> > &);
+		static void	process(std::vector < std::pair<int, struct addrinfo> > &, std::vector<Server> & servers);
 
 		~Poll(void);
 
