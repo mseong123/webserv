@@ -6,7 +6,7 @@
 /*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/28 16:22:10 by melee            ###   ########.fr       */
+/*   Updated: 2023/11/28 18:53:59 by melee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	Poll::check(void)
 }
 
 /* Goes through fds and process each ready FD */
-void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks)
+void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks, std::vector<Server> & servers)
 {
 	for (size_t i = 0; i < fds.size(); i++)
 	{
@@ -86,7 +86,8 @@ void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks)
 				continue;
 
 			conn.get_request()->parse_request_data();
-			std::cout << *(conn.get_request()) << std::endl;
+			conn.get_response()->parse_response_data(*(conn.get_request()), servers);
+			//std::cout << *(conn.get_request()) << std::endl;
 			std::string	servMsg;
 
 			servMsg = "HTTP/1.1 200 \r\nContent-Type: text/html\r\n";

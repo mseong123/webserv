@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Connection.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
+/*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:37:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/27 12:12:03 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/28 18:49:32 by melee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 # define CONNECTION_HPP
 
 # include "webserv.hpp"
-
-class	Response {};
 
 class	Connection
 {

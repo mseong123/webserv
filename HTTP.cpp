@@ -30,7 +30,7 @@ void HTTP::init(const std::string path) {
 	{
 		if (Poll::check() == 0)
 			continue;
-		Poll::process(socks);
+		Poll::process(socks, this->_server);
 	}
 	return ;
 };
