@@ -10,24 +10,27 @@ void HTTP::init(const std::string path) {
 	Config config(path);
 	config.parse_file(this->get_servers());
 
-	int				sockfd;
-	struct addrinfo	res;
+	std::vector< std::pair<int, struct addrinfo> >	socks;
 
 	std::vector< std::pair<std::string, std::string> >::iterator it;
 	for (it = Server::address.begin(); it != Server::address.end(); it++)
 	{
+		int				sockfd;
+		struct addrinfo	sockai;
+
 		std::cout << it->first << ":" << it->second << std::endl;
-		sockfd = Connection::serv_listen(it->first, it->second, &res);
+		sockfd = Connection::serv_listen(it->first, it->second, &sockai);
 		Poll::add_fd(sockfd, POLLIN | POLLPRI);
+		socks.push_back(std::pair<int, struct addrinfo>(sockfd, sockai));
 	}
 
-	Poll::put_fds();
+	std::cout << Poll::fds << std::endl;
 
 	while (true)
 	{
 		if (Poll::check() == 0)
 			continue;
-		Poll::process(&res);
+		Poll::process(socks);
 	}
 	return ;
 };
