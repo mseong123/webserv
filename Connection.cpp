@@ -6,7 +6,7 @@
 /*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:42:10 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/28 15:54:48 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/29 19:18:44 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,37 +78,37 @@ int	Connection::serv_listen(std::string host, std::string port, struct addrinfo 
 }
 
 /* Default constructor */
-Connection::Connection(void) : _sockfd(0), 
-								_request(new Request), 
-								_response(new Response)
+Connection::Connection(void) : _sockfd(0)
 {
+	memset(&_request, 0, sizeof(_request));
+	memset(&_response, 0, sizeof(_response));
 	return ;
 }
 
-/* Copy constructor */
-Connection::Connection(Connection const &cls) : _request(new Request),
-												_response(new Response)
-{
-	*this = cls;
-	return ;
-}
+///* Copy constructor */
+//Connection::Connection(Connection &cls)
+//{
+//	*this = cls;
+//	return ;
+//}
 
 /* Destructor */
 Connection::~Connection(void)
 {
-	delete this->_request;
-	delete this->_response;
 	return ;
 }
 
-/* Assignment operator overload */
-Connection const	&Connection::operator=(Connection const &cls)
-{
-	this->_sockfd = cls.get_sockfd();
-	this->_request = cls.get_request();
-	this->_response = cls.get_response();
-	return (*this);
-}
+///* Assignment operator overload */
+//Connection	&Connection::operator=(Connection &cls)
+//{
+//	if (this != &cls)
+//	{
+//		this->_sockfd = cls.get_sockfd();
+//		this->_request = cls.get_request();
+//		this->_response = cls.get_response();
+//	}
+//	return (*this);
+//}
 
 /* Getter: return value of _sockfd */
 int	Connection::get_sockfd(void) const
@@ -117,13 +117,13 @@ int	Connection::get_sockfd(void) const
 }
 
 /* Getter: return value of _request */
-Request	*Connection::get_request(void) const
+Request	&Connection::get_request(void)
 {
 	return (this->_request);
 }
 
 /* Getter: return value of _response */
-Response	*Connection::get_response(void) const
+Response	&Connection::get_response(void)
 {
 	return (this->_response);
 }
@@ -136,14 +136,14 @@ void	Connection::set_sockfd(int sockfd)
 }
 
 /* Getter: set value of _request */
-void	Connection::set_request(Request *request)
+void	Connection::set_request(Request &request)
 {
 	this->_request = request;
 	return ;
 }
 
 /* Getter: set value of _response */
-void	Connection::set_response(Response *response)
+void	Connection::set_response(Response &response)
 {
 	this->_response = response;
 	return ;

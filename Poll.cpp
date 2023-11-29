@@ -6,7 +6,7 @@
 /*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/28 18:53:59 by melee            ###   ########.fr       */
+/*   Updated: 2023/11/29 18:49:44 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks, std::v
 				struct addrinfo	*res;
 				Connection		*conn = new Connection;
 
+				std::cout << conn << std::endl;
 				res = NULL;
 				for (size_t i = 0; i < socks.size(); i++)
 				{
@@ -72,6 +73,7 @@ void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks, std::v
 			{
 				int			conn_ind = Connection::get_conn_index(fds.at(i).fd);
 				Connection	&conn = Connection::io_conn.at(conn_ind);
+				std::cout << &conn << std::endl;
 				recv_data(fds.at(i).fd, conn);
 			}
 		}
@@ -82,12 +84,12 @@ void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks, std::v
 
 			std::cout << "POLLOUT: " << fds.at(i).fd << std::endl;
 
-			if (conn.get_request()->get_data().length() == 0)
+			if (conn.get_request().get_data().length() == 0)
 				continue;
 
-			conn.get_request()->parse_request_data();
-			conn.get_response()->parse_response_data(*(conn.get_request()), servers);
-			//std::cout << *(conn.get_request()) << std::endl;
+			conn.get_request().parse_request_data();
+			conn.get_response().parse_response_data(conn.get_request(), servers);
+			//std::cout << conn.get_request() << std::endl;
 			std::string	servMsg;
 
 			servMsg = "HTTP/1.1 200 \r\nContent-Type: text/html\r\n";
@@ -149,7 +151,7 @@ void	Poll::close_fd(int i)
 	Connection	&conn = Connection::io_conn.at(conn_ind);
 
 	conn.set_sockfd(0);
-	conn.get_request()->set_data("");
+	conn.get_request().set_data("");
 	Connection::io_conn.erase(Connection::io_conn.begin() + conn_ind);
 	close(fds.at(i).fd);
 	fds.erase(fds.begin() + i);
@@ -173,13 +175,21 @@ void	Poll::recv_data(int fd, Connection &conn)
 	char	buffer[RECV_BUFFER_SIZE];
 	int		recvstat;
 
+	std::cout << "R1" << std::endl;
 	recvstat = recv(fd, buffer, RECV_BUFFER_SIZE - 2, 0);
+	std::cout << "R2" << std::endl;
 	if (recvstat < 0)
 		throw CustomException("Recv failure: " + std::string(strerror(errno)));
+	std::cout << "R3" << std::endl;
 	buffer[recvstat] = 0;
-	conn.get_request()->set_data(conn.get_request()->get_data() + std::string(buffer));
-	std::cout << conn.get_request()->get_data() << std::endl;
+	std::cout << "R4" << std::endl;
+	std::cout << &conn << std::endl;
+	conn.get_request().set_data(conn.get_request().get_data() + std::string(buffer));
+	std::cout << "R5" << std::endl;
+	std::cout << conn.get_request().get_data() << std::endl;
+	std::cout << "R6" << std::endl;
 	update_fd(fd, POLLIN | POLLPRI | POLLOUT | POLLWRBAND);
+	std::cout << "R7" << std::endl;
 	return ;
 }
 

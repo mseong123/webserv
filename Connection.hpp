@@ -6,7 +6,7 @@
 /*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:37:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/28 18:49:32 by melee            ###   ########.fr       */
+/*   Updated: 2023/11/29 19:22:01 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,19 @@ class	Connection
 		static int	serv_listen(std::string host, std::string port, struct addrinfo *res);
 
 		Connection(void);
-		Connection(Connection const &cls);
 		~Connection(void);
 
-		Connection const	&operator=(Connection const &cls);
-
 		int			get_sockfd(void) const;
-		Request		*get_request(void) const;
-		Response	*get_response(void) const;
+		Request		&get_request(void);
+		Response	&get_response(void);
 		void		set_sockfd(int sockfd);
-		void		set_request(Request *request);
-		void		set_response(Response *response);
+		void		set_request(Request &request);
+		void		set_response(Response &response);
 
 	private:
 		int			_sockfd;
-		Request		*_request;
-		Response	*_response;
+		Request		_request;
+		Response	_response;
 };
 
 std::ostream	&operator<<(std::ostream &out, std::vector<Connection> &conn);
