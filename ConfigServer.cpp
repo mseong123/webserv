@@ -189,8 +189,8 @@ void ConfigServer::parse_server_block(size_t *pos, std::vector<Server> & _server
 				*pos += 6;
 				this->parse_listen(pos, server, file_content);
 			}
-		else if (file_content.substr(*pos, 12) == "server_name") {
-				*pos += 12;
+		else if (file_content.substr(*pos, 11) == "server_name") {
+				*pos += 11;
 				this->parse_server_name(pos, server, file_content);
 			}
 		else if (file_content.substr(*pos, 20) == "client_max_body_size") {
