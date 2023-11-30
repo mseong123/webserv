@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MSEONG Portfolio Page</title>
+    <meta name="description" content="MSEONG Portfolio Page">
+    <meta name="author" content="Mseong">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom" id="nav-scrollspy">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#expand">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="#welcome" class="navbar-brand navbar-brand-custom">MSEONG</a>
+        </div>
+        <div class="collapse navbar-collapse" id="expand">
+          
+          <ul class="nav navbar-nav navbar-nav-custom">
+            <li><a href="#about">ABOUT ME</a></li>
+            <li><a href="#projects">PROJECTS</a></li>
+            <li><a href="#contact">CONTACT</a></li>
+            <li><a href="https://mseong.medium.com" target="_blank">BLOG</a></li>
+          </ul>
+        
+        </div>
+      </div>
+    </nav>
+
+    <section id="welcome">
+      <h1>Full-Stack Web Developer</h1>
+      <h3>Lean. Responsive. Maintainable Codes</h3>
+    </section>
+
+    <section id="about">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-4" style="margin-bottom:40px">
+            <p>
+              Hi, I'm a self taught aspiring Web Developer. My passion in Software Development stems from the fact that I can build just about 
+              anything from scratch by learning and using the tools/resources online. My learning routemap is based on the curriculum 
+              provided by <i class="fa fa-free-code-camp"></i> <u>freeCodeCamp</u> <a href="https://www.freecodecamp.org/mseong" target="_blank" 
+              style="color:#F9BA32">(See profile link)</a>
+              and some parts of the Programmer Curriculum by <u>P1xt</u> <a href="https://github.com/P1xt/p1xt-guides" target="_blank" 
+              style="color:#F9BA32">(see link)</a>.
+            </p>
+          </div>
+          <div class="col-sm-4" style="margin-bottom:40px">
+            <h3 style="border-bottom:2px solid white;margin-top:0">Toolbox <i class="fa fa-wrench"></i></h3>
+            <p>
+              <u>Languages</u>: HTML, CSS, Javascript, SQL
+              <br>
+              <u>Preprocessor</u>: LESS/SASS
+              <br>
+              <u>Framework/Libraries</u>:Bootstrap, React, ReactRouter, NodeJS (ExpressJS), MongooseJS
+              <br>
+              <u>Database</u>:MySQL, MongoDB
+              <br>
+              <u>Authentication and Session</u>:PassportJS, Express-SessionJS
+              <br>
+              <u>Unit Testing</u>:MochaJS, ChaiJS
+              <br>
+              <u>VCS</u>:Git, GitHub
+              <br>
+              <u>IDE</u>: Microsoft Visual Code Studio
+              <br>
+              <u>Development tools</u>: npm, create-react-app, Chrome Devtool
+              <br>
+              <u>Others</u>:Website Hosting, Heroku, Netlify
+            </p>
+          </div>
+
+          <div class="col-sm-4" style="margin-bottom:40px">
+            <h3 style="border-bottom:2px solid white;margin-top:0">Key Reading <i class="fa fa-book"></i></h3>
+            
+              <ul style="padding-left:20px">
+                <li>You don't know JS <u>Kyle Simpson (Essential Read for Javascript)</u></li>
+                <li>Database Systems_ Design, Implementation, & Management (2016) <u>Carlos Coronel, Steven Morris</u></li>
+                <li>Pro Git (Essential Read for Git) <u>Scott Chacon, Ben Straub</u></li>
+              </ul>
+            
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <h3>PROJECTS</h3>
+      
+      <ul class="nav nav-tabs nav-tabs-custom">
+        <li class="active"><a href="#" data-target="#front-end" data-toggle="tab">FRONT END</a></li>
+        <li><a href="#" data-target="#back-end" data-toggle="tab">BACK END</a></li>
+        <li><a href="#" data-target="#full-stack" data-toggle="tab">FULL STACK</a></li>
+      </ul>
+
+      <div class="tab-content">
+        <div class="tab-pane active fade in" id="front-end">
+          
+          <h4>RESPONSIVE WEB DESIGN</h4>
+          <div class="grid">
+
+            <div class="project-tile">
+              <a href="https://mseong.my/tribute-page/" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://mseong.my/tribute-page/"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">TRIBUTE PAGE</h4>
+                <p class="project-description-body">Simple Tribute Page with built-in responsiveness and semantic HTML
+                  mark-up.
+                  <br>
+                  <br>
+                  <a href="https://github.com/mseong123/tribute-page" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="project-tile">
+              <a href="https://mseong.my/survey-form/" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://mseong.my/survey-form/"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">SURVEY FORM</h4>
+                <p class="project-description-body">Simple HTML Form markup with CSS Styling with CSS Grid layout adjustment
+                  for larger viewport.
+                  <br>
+                  <br>
+                  <a href="https://github.com/mseong123/survey-form" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="project-tile">
+              <a href="https://mseong.my/product-landing-page/" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://mseong.my/product-landing-page/"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">PRODUCT LANDING PAGE</h4>
+                <p class="project-description-body">Sample Product Landing Page with extensive use of CSS Grid and Flexbox for
+                  Layout.
+                  <br>
+                  <br>
+                  <a href="https://github.com/mseong123/product-landing-page" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <h4>BOOTSTRAP FRAMEWORK</h4>
+          <div class="grid">
+            
+            <div class="project-tile">
+              <a href="http://www.swsmotor.com.my" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <!--amended to be different from other groups. Use <img> instead of <iframe> since codepen disallow serving over http (swsmotor can't be hosted on https)-->
+                  <img src="https://raw.githubusercontent.com/mseong123/assets/master/swsmotor/swsmotor.png"
+                    alt="swsmotor.com.my snapshot picture">
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">CAR WORKSHOP LANDING PAGE (www.swsmotor.com.my)</h4>
+                <p class="project-description-body">Fully Functional Website built for Car Workshop Company and hosted on
+                  actual domain. Features include:
+                  <ul class="project-description-list">
+                    <li>Navbar and page responsiveness built using Bootstrap.</li>
+                    <li>WowJS framework used for Scrolling animation.</li>
+                    <li>Embedded Google Map location.</li>
+                    <li>Contact Form feature using embedded Google Forms.</li>
+                  </ul>
+                  <a href="https://github.com/mseong123/swsmotor-com-my" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="project-tile">
+              <a href="https://mseong.my/medical-center-landing-site-template/" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://mseong.my/medical-center-landing-site-template/"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">MEDICAL CENTER LANDING SITE TEMPLATE</h4>
+                <p class="project-description-body">Fully Responsive website built purely based on Bootstrap components and
+                  plugins.
+                  <ul class="project-description-list">
+                    <li>Minimal CSS markup used. </li>
+                    <li>Override Bootstrap default styles only when necessary using '-custom' namespace in CSS, consistent with
+                      best practices.</li>
+                    <li>Full use of Bootstrap components and plugins including Modal, Carousel, Scrollspy, Nav, Navbar, Forms,
+                      Popovers, Layout.</li>
+                    <li>Modified Carousel,Popover & Modal Plugins using JQUERY.</li>
+                  </ul>
+                  <a href="https://github.com/mseong123/medical-center-landing-site-template" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <h4>ReactJS</h4>
+          <div class="grid">
+          
+            <div class="project-tile">
+              <a href="https://mseong.my/reactjs-random-quote-machine/" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://mseong.my/reactjs-random-quote-machine"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">RANDOM QUOTE MACHINE</h4>
+                <p class="project-description-body">Provides random Inspirational Quotes. User can share quotes using Twitter.
+                  Built using ReactJS.
+                  <br>
+                  <br>
+                  <a href="https://github.com/mseong123/reactjs-random-quote-machine" target="_blank">Github source code</a></p>
+              </div>
+            </div>
+
+            <div class="project-tile">
+              <a href="https://mseong.my/reactjs-mark-down-previewer" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://mseong.my/reactjs-mark-down-previewer"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">MARK DOWN PREVIEWER</h4>
+                <p class="project-description-body">App automatically parses Markdown format to HTML5. Built using ReactJS 
+                  and styled using Bootstrap layout.
+                  <br>
+                  <br>
+                  <a href="https://github.com/mseong123/reactjs-mark-down-previewer" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="project-tile">
+              <a href="https://mseong.my/reactjs-drum-machine" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://mseong.my/reactjs-drum-machine"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">DRUM MACHINE</h4>
+                <p class="project-description-body">Built using ReactJS. Including keydown features. Styled using
+                  Pure CSS.
+                  <br>
+                  <br>
+                  <a href="https://github.com/mseong123/reactjs-drum-machine" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="project-tile">
+              <a href="https://mseong.my/reactjs-javascript-calculator" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://mseong.my/reactjs-javascript-calculator"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">JAVASCRIPT CALCULATOR</h4>
+                <p class="project-description-body">A Fully Functional Calculator that can chain mathematical operations
+                  together. Built using React. 
+                  <br>
+                  <br>
+                  <a href="https://github.com/mseong123/reactjs-javascript-calculator" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="project-tile">
+              <a href="https://mseong.my/reactjs-pomodoro-clock" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://mseong.my/reactjs-pomodoro-clock"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">POMODORO CLOCK</h4>
+                <p class="project-description-body">A Countdown Clock that uses the Pomodoro technique and alternates between
+                  Session Timer and Break Timer. The length of the Timers are customisable and can be reset. Built using React
+                  and Settings UI is styled using Bootstrap Modal module. 
+                  <br>
+                  <br>
+                  <a href="https://github.com/mseong123/reactjs-pomodoro-clock" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <h4>D3 DATA VISUALISATION</h4>
+          <div class="grid">
+            <div class="project-tile">
+              <a href="https://mseong.my/d3-barchart/" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://mseong.my/d3-barchart/"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">D3 BAR CHART with Dynamic filtering</h4>
+                <p class="project-description-body">United States GDP
+                  <br>
+                  <br>
+                  <a href="https://github.com/mseong123/d3-barchart" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </a>
+            </div>
+
+            <div class="project-tile">
+              <a href="https://mseong.my/d3-scatterplot/" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://mseong.my/d3-scatterplot/"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">D3 Scatterplot</h4>
+                <p class="project-description-body">Doping in Professional Bicycle Racing
+                  <br>
+                  <br>
+                  <a href="https://github.com/mseong123/d3-scatterplot" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="project-tile">
+              <a href="https://mseong.my/d3-heatmap/" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://mseong.my/d3-heatmap/"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">D3 HeatMap</h4>
+                <p class="project-description-body">Monthly Global Land-Surface Temperature(Celcius) 1753-2015
+                  <br>
+                  <br>
+                  <a href="https://github.com/mseong123/d3-heatmap" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="project-tile">
+              <a href="https://mseong.my/d3-choropleth/" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://mseong.my/d3-choropleth/"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">D3 Choropleth</h4>
+                <p class="project-description-body">United States Educational Attainment - Percentage of adults age 25 and
+                  older with a bachelor's degree or higher (2010-2014) 
+                  <br>
+                  <br>
+                  <a href="https://github.com/mseong123/d3-choropleth" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="project-tile">
+              <a href="https://mseong.my/d3-treemap/" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://mseong.my/d3-treemap/"></iframe>
+                </div>
+                </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">D3 Treemap</h4>
+                <p class="project-description-body">Kickstarter Pledges - Top 100 Most Pledged Kickstarter Campaigns Grouped
+                  By Category 
+                  <br>
+                  <br>
+                  <a href="https://github.com/mseong123/d3-treemap" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+            
+          </div>
+
+          <h4>CLASSIC GAMES</h4>
+          <div class="grid">
+            <div class="project-tile">
+              <a href="https://mseong.my/snake/" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://mseong.my/snake/"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">SNAKE</h4>
+                <p class="project-description-body">Built using PURE HTML/CSS/VANILLA JAVASCRIPT.
+                  <ul class="project-description-list">
+                    <li>Game designed using OOP principles using self-contained Objects with its own properties and functions. </li>
+                    <li>Rendering is done using DOM API.</li>
+                    <li>Responsive Design.</li>
+                    <li>Controls draggable on Touch Screens using Touch API.</li>
+                  </ul>
+                  <a href="https://github.com/mseong123/snake" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="project-tile">
+              <a href="https://mseong.my/space-invaders/" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://mseong.my/space-invaders/"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">SPACE INVADERS</h4>
+                <p class="project-description-body">
+                  Built using vanilla JavaScript rendered with HTML CANVAS using OOP Principles (more performant than using DOM API
+                  due to GAME having significantly more moving parts compared to SNAKE GAME).
+                  <br>
+                  <br>
+                  <a href="https://github.com/mseong123/space-invaders" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="back-end">
+
+          <h4>MICROSERVICE</h4>
+          <div class="grid">
+
+            <div class="project-tile">
+              <a href="https://microservice-timestamp-mseong.netlify.com/" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://microservice-timestamp-mseong.netlify.com/"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">TIMESTAMP MICROSERVICE</h4>
+                <p class="project-description-body">This service accepts a valid date (either in the format YYYY-MM-DD or in UNIX timestamp seconds) 
+                  submitted as part of the GET METHOD. It will return a JSON object with UNIX and UTC time properties of the submitted date. If 
+                  an invalid date is given, it will return a JSON object stating so.
+                  <ul class="project-description-list">
+                    <li>Built using NodeJS and ExpressJS.</li>
+                    <li>Hosted on Netlify.</li>
+                    <li>Server-side API is built using Netlify's serverless AWS Lambda Functions.</li>
+                  </ul>
+                  <a href="https://github.com/mseong123/microservice-timestamp" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="project-tile">
+              <a href="https://microservice-file-metadata-mseong.netlify.com/" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://microservice-file-metadata-mseong.netlify.com/"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">FILE METADATA MICROSERVICE</h4>
+                <p class="project-description-body">This service accepts a single file upload and will return a JSON object with name, 
+                  type and size(in bytes) properties of the uploaded file.
+                  <ul class="project-description-list">
+                    <li>Built using NodeJS and ExpressJS.</li>
+                    <li>Hosted on Netlify.</li>
+                    <li>Server-side API is built using Netlify's serverless AWS Lambda Functions.</li>
+                  </ul>
+                  <a href="https://github.com/mseong123/microservice-file-metadata" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="project-tile">
+              <a href="https://microservice-headerparser-mseong.netlify.com/" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://microservice-headerparser-mseong.netlify.com/"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">HEADER PARSER MICROSERVICE</h4>
+                <p class="project-description-body">This service parses your GET request header and returns your IP address, 
+                  language, operating system and browser specs. 
+                  <ul class="project-description-list">
+                    <li>Built using NodeJS and ExpressJS.</li>
+                    <li>Hosted on Netlify.</li>
+                    <li>Server-side API is built using Netlify's serverless AWS Lambda Functions.</li>
+                  </ul>
+                  <a href="https://github.com/mseong123/microservice-headerparser" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="project-tile">
+              <a href="https://microservice-url-shortener-mseong.netlify.com/" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://microservice-url-shortener-mseong.netlify.com/"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">URL SHORTENER MICROSERVICE</h4>
+                <p class="project-description-body">This service accepts a VALID URL and will return both the original URL and 
+                  the shortened URL in a JSON response. User can pass the shortened URL to the API and it will redirect the user to 
+                  the original URL website. Service will return a JSON error if user pass an invalid URL (either invalid website name 
+                  or invalid protocol ie HTTP/HTTPs/ftp). 
+                  <ul class="project-description-list">
+                    <li>Built using NodeJS and ExpressJS.</li>
+                    <li>Database - MongooseJS and MongoDB.</li>
+                    <li>Async/await ES6 Javascript functions used in interaction with Database. </li>
+                    <li>Hosted on Netlify and server-side API is built using Netlify's serverless AWS Lambda Functions. </li>
+                  </ul>
+                  <a href="https://github.com/mseong123/microservice-url-shortener" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="project-tile">
+              <a href="https://microservice-exercise-tracker-mseong.netlify.com/" target="_blank">
+                <div class="project-wrapper">
+                  <div class="project-hover-layer"></div>
+                  <iframe src="https://microservice-exercise-tracker-mseong.netlify.com/"></iframe>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">EXERCISE TRACKER MICROSERVICE</h4>
+                <p class="project-description-body">This service is an exercise tracker and allows users to track their user (id and name) 
+                  and exercise data (description, duration and date completed) through the API in JSON form. Also allows filtering of 
+                  exercise data. Data is stored in MongoDB (document database). 
+                  <ul class="project-description-list">
+                    <li>Built using NodeJS and ExpressJS.</li>
+                    <li>Database - MongooseJS and MongoDB.</li>
+                    <li>Async/await ES6 Javascript functions used in interaction with Database. </li>
+                    <li>Hosted on Netlify and server-side API is built using Netlify's serverless AWS Lambda Functions. </li>
+                  </ul>
+                  <a href="https://github.com/mseong123/microservice-exercise-tracker" target="_blank">Github source code</a>
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+
+        </div>
+
+        <div class="tab-pane fade" id="full-stack">
+          <h4>Accounting Software</h4>
+          <div class="grid">
+            <div class="project-tile grid-fullstack">
+              <a href="https://protocount.herokuapp.com" target="_blank">
+                <div class="project-wrapper full-stack">
+                  <div class="project-hover-layer"></div>
+                  <image class="full-stack-img"
+                  src="https://raw.githubusercontent.com/mseong123/assets/master/Protocount/Protocount%20front%20page.jpg"/>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">
+                  <img src="https://raw.githubusercontent.com/mseong123/assets/master/Protocount/accounting.svg" 
+                  style="width:35px;height:35px;display: inline-block !important" alt='logo'/>
+                  Protocount</h4>
+                <p class="project-description-body">
+                  Fully functional Web-Based Accounting Software prototype built to imitate an off-the-shelf commercial accounting system  
+                  <a href="https://www.autocountsoft.com/" target="'_blank">
+                    Autocount.
+                  </a>
+                    Built as a Single Page Application (SPA) using the following technology stack:
+                  <h4>Front-End</h4>
+                    ReactJS, ReactRouterJS for client side routing, Bootstrap (framework for CSS)
+                  <h4>Back-End and Database</h4>
+                    NodeJS (Javascript runtime web server), ExpressJS Framework (lightweight framework for NodeJS), 
+                    NodeJS-MySQL driver (connector for database)
+                  <h4>Database</h4>
+                    MySQL (relational database - community version database)
+                  <h4>Development tools</h4>
+                    Git (version control), Create-React-App (development tool for ReactJS), MySQL Workbench (schema for MySQL) 
+                  <br>
+                  <br>
+                  <strong>Development hours:4 months (300 hours)</strong>
+                  <br>
+                  <a href="http://protocount.herokuapp.com" target="_blank">Live Version (Hosted on Heroku)</a>&nbsp<em>[Username:<u>protocount</u> Password:<u>password</u>]</em>
+                  <br>
+                  <a href="https://github.com/mseong123/protocount-create-react-app" target="_blank">Github source code</a>&nbsp(Front end)
+                  <br>
+                  <a href="https://github.com/mseong123/protocount-nodejs-mysql" target="_blank">Github source code</a>&nbsp(Back end)
+                  <br>
+                  <br>
+                  <a href="https://mseong.medium.com/how-i-went-a-little-crazy-and-coded-a-fully-functional-accounting-software-without-prior-coding-8f21bb341f84" 
+                  target="_blank">Blog</a>&nbsp(How I made the App)
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <h4>Chat Application</h4>
+          <div class="grid">
+            <div class="project-tile grid-fullstack">
+              <a href="https://proto-chat.onrender.com" target="_blank">
+                <div class="project-wrapper full-stack">
+                  <div class="project-hover-layer"></div>
+                  <image class="full-stack-img"
+                  src="https://raw.githubusercontent.com/mseong123/assets/master/proto-chat/proto-chat%20front%20page.jpg"/>
+                </div>
+              </a>
+              <div class="project-description">
+                <h4 class="project-description-title2">
+                  <img src="https://raw.githubusercontent.com/mseong123/assets/master/proto-chat/chat-icon-2.png" 
+                  style="width:35px;height:35px;display: inline-block !important" alt='logo'/>
+                  Proto Chat</h4>
+                <p class="project-description-body">
+                  Simple chat app built to mimic normal chat applications. Interface optimised for user experience. Application
+                  features stated in /app-info.
+                  <h4>Front-End</h4>
+                  <ul>
+                      <li>Native HTML,CSS and JS (server-side rendered using PUG template engine). Pug 
+                        compiled functions i.e. modalTemplate.js (compiled using Pug-CLI) are used in scripts on client 
+                        side to ensure code reusability and to simplify development. 
+                      </li>
+                      <li>Bootstrap for styling.</li>
+                      <li>Socket.io on client side.</li>
+                  </ul>
+                  <h4>Back-End</h4>
+                  <ul>
+                    <li>NodeJS and ExpressJS.</li>
+                    <li>Socket.io for websocket interface to enable real time chat messaging. </li>
+                    <li>MongooseJS (Object Data Modelling and connector for MongoDB database).</li>
+                  </ul>
+                  <h4>Database</h4>
+                  <ul>
+                    <li>MongoDB Atlas (Document-based NoSQL database).</li>
+                  </ul>
+                  <h4>Authentication</h4>
+                  <ul>
+                    <li>PassportJS for OAuth 2.0 federated authentication (Google and Facebook login).</li>
+                    <li>Express-SessionJS for managing user sessions and authentication.</li>
+                  </ul>
+                  <br>
+                  <strong>Development hours:2 weeks (70 hours)</strong>
+                  <br>
+                  <a href="https://proto-chat.onrender.com" target="_blank">Live Version (Hosted on render.com)</a>&nbsp<em>[create new user account or login using Google or Facebook]</em>
+                  <br>
+                  <a href="https://github.com/mseong123/proto-chat" target="_blank">Github source code</a>
+                  <br>
+                  <br>
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="contact">
+      <div>
+        <a href="https://github.com/mseong123" target="_blank"><i class="fa fa-github fa-4x"></i></a>
+        <a href="https://www.facebook.com/meng.s.lee.3" target="_blank"><i class="fa fa-facebook fa-4x"></i></a>
+        <a href="mailto:meng.seong@gmail.com" target="_blank"><i class="fa fa-envelope fa-4x"></i></a>
+        <a href="https://twitter.com/mseong123" target="_blank"><i class="fa fa-twitter fa-4x"></i></a>
+        <a href="https://www.freecodecamp.org/mseong" target="_blank"><i class="fa fa-free-code-camp fa-4x"></i></a>
+      </div>
+    </section>
+
+  <footer>
+    <small>&copy;Created by Mseong</small>
+  </footer>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="script.js"></script>
+  </body>
+  
+
+</html>
