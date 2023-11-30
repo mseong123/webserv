@@ -6,12 +6,14 @@
 /*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/30 17:18:05 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/30 19:13:57 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserv.hpp"
 #include <dirent.h>
+#include <sys/stat.h>
+#include <ctime>
 
 /* Initialisation for static attributes */
 std::vector<struct pollfd>	Poll::fds;
@@ -117,6 +119,8 @@ void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks, std::v
 				{ // SERVE DIRECTORY LISTING
 					DIR				*dir = opendir(filename.c_str());
 					struct dirent	*dp;
+					std::ifstream	style("default.css");
+					std::string		line;
 
 					servMsg = "HTTP/1.1 404 \r\nContent-Type: text/html\r\n";
 					servMsg = servMsg + "\r\n\r\n";
@@ -133,30 +137,88 @@ void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks, std::v
 
 						file_content = "<html><header><title>";
 						file_content += filename;
-						file_content += "</title></header>";
-						file_content += "<body><h1>";
+						file_content += "</title><style>";
+						while (getline(style, line))
+							file_content += line;
+						file_content += "</style></header>";
+						file_content += "<body><h1>Index of ";
 						file_content += filename;
-						file_content += "</h1>";
+						file_content += "</h1><div class='dls'>";
+						file_content += "<div class='row'>";
+						file_content += "<div class='fn'>Filename</div>";
+						file_content += "<div class='tm'>Last Modified</div>";
+						file_content += "<div class='size'>File Size</div>";
+						file_content += "</div><hr />";
+
 						dp = readdir(dir);
 						while (dp != NULL)
 						{
-							std::string	fn = filename + dp->d_name;
-							DIR			*tmp = opendir(fn.c_str());
+							if (std::string(dp->d_name).compare(".") != 0)
+							{
+								std::string	fn = filename + dp->d_name;
+								DIR			*tmp = opendir(fn.c_str());
+								struct stat	fs;
+								struct tm	*tm;
+								char		dt[1024];
 
-							file_content += "<p><a href='";
-							file_content += dp->d_name;
-							if (tmp != NULL)
-								file_content += "/";
-							file_content += "'>";
-							file_content += dp->d_name;
-							if (tmp != NULL)
-								file_content += "/";
-							file_content += "</a></p>";
-							if (tmp != NULL)
-								closedir(tmp);
+								memset(&dt, 0, sizeof(dt));
+								file_content += "<div class='row'>";
+
+								file_content += "<div class='fn'><a href='";
+								file_content += dp->d_name;
+								if (tmp != NULL)
+									file_content += "/";
+								file_content += "'>";
+								file_content += dp->d_name;
+								if (tmp != NULL)
+									file_content += "/";
+								file_content += "</a></div>";
+
+								stat(fn.c_str(), &fs);
+								tm = localtime(&fs.st_mtime);
+								strftime(dt, sizeof(dt), "%x %r", tm);
+								file_content += "<div class='tm'>";
+								file_content += dt;
+								file_content += "</div>";
+
+								file_content += "<div class='size'>";
+								if (tmp != NULL)
+									file_content += "-";
+								else if (stat(fn.c_str(), &fs) == 0)
+								{
+									std::string	unit;
+									size_t		size = fs.st_size;
+
+									if (size > 1000000000000)
+									{
+										size /= 1000000000;
+										unit = "g";
+									}
+									else if (size > 1000000000)
+									{
+										size /= 1000000;
+										unit = "m";
+									}
+									else if (size > 1000000)
+									{
+										size /= 1000;
+										unit = "k";
+									}
+									else
+										unit = "";
+									file_content += std::to_string(size);
+									file_content += unit;
+								}
+								file_content += "</div>";
+
+								file_content += "</div>";
+
+								if (tmp != NULL)
+									closedir(tmp);
+							}
 							dp = readdir(dir);
 						}
-						file_content += "</body></html>";
+						file_content += "</div></body></html>";
 
 						servMsg += "Content-Length: ";
 						servMsg += std::to_string(file_content.length());

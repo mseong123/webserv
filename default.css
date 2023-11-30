@@ -1,0 +1,38 @@
+body {
+	margin: 0 auto;
+	width: 75vw;
+	font-family: "Courier New", fixed;
+	font-size: 16pt;
+}
+
+h1 {
+	margin: 42px 0 14px;
+}
+
+div.dls {
+	margin-top: 16px;
+	padding-top: 16px;
+}
+
+hr {
+	margin: 16 0;
+	border-top: 2px solid black;
+}
+
+div.row {
+	display: flex;
+	margin: 4px 0;
+}
+
+div.fn {
+	width: 40%;
+}
+
+div.tm {
+	width: 35%;
+}
+
+div.size {
+	width: 15%;
+	text-align: right;
+}
