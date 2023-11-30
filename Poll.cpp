@@ -6,7 +6,7 @@
 /*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/29 19:31:29 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/30 14:19:54 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,15 +86,90 @@ void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks, std::v
 				continue;
 
 			conn.get_request().parse_request_data();
-			conn.get_response().parse_response_data(conn.get_request(), servers);
+//			conn.get_response().parse_response_data(conn.get_request(), servers);
+			(void) servers;
 			//std::cout << conn.get_request() << std::endl;
 			std::string	servMsg;
+			std::string	target;
+			std::string	route;
 
-			servMsg = "HTTP/1.1 200 \r\nContent-Type: text/html\r\n";
-			servMsg = servMsg + "\r\n\r\n";
-			servMsg = servMsg + "<html><header><title>Go!</title>";
-			servMsg = servMsg + "</header><body><p>You did it!</p>";
-			servMsg = servMsg + "</body></html>";
+			route = conn.get_request().get_route();
+			std::cout << std::endl;
+			std::cout << "ROUTE: " << route << std::endl;
+			std::cout << std::endl;
+			target = "/static-site";
+			if (route.compare(0, target.length(), target) != 0)
+			{
+				servMsg = "HTTP/1.1 200 \r\nContent-Type: text/html\r\n";
+				servMsg = servMsg + "\r\n\r\n";
+				servMsg = servMsg + "<html><header><title>Go!</title>";
+				servMsg = servMsg + "</header><body><p>You did it!</p>";
+				servMsg = servMsg + "</body></html>";
+			}
+			else
+			{
+				std::string	filename;
+				std::string	line_to_serve;
+
+				filename = target.substr(1);
+				if (route.compare(target) == 0)
+					filename = filename + "/index.html";
+				else
+					filename = filename + route.substr(target.length());
+				std::cout << filename << std::endl;
+				
+				std::ifstream	file_to_serve(filename);
+
+				servMsg = "HTTP/1.1 ";
+				if (file_to_serve.is_open() == false)
+				{
+					servMsg = "HTTP/1.1 404 \r\nContent-Type: text/html\r\n";
+					servMsg = servMsg + "\r\n\r\n";
+					servMsg = servMsg + "<html><header><title>Error: 404";
+					servMsg = servMsg + "</title></header><body><h1>404</h1>";
+					servMsg = servMsg + "<p>File not found.</p>";
+					servMsg = servMsg + "</body></html>";
+				}
+				else
+				{
+					std::string	file_content;
+					std::string	file_type;
+
+					file_content = "";
+					while (getline(file_to_serve, line_to_serve))
+						file_content = file_content + "\n" + line_to_serve;
+
+					file_to_serve.close();
+
+					file_type = filename.substr(filename.find_last_of(".") + 1);
+					std::cout << file_type << std::endl;
+
+					servMsg = servMsg + "200 \r\n";
+					servMsg = servMsg + "Content-Type: ";
+					if (file_type.compare("html") == 0)
+						servMsg = servMsg + "text/html";
+					else if (file_type.compare("css") == 0)
+						servMsg = servMsg + "text/css";
+					else if (file_type.compare("jpg") == 0)
+						servMsg = servMsg + "image/jpeg";
+					else if (file_type.compare("png") == 0)
+						servMsg = servMsg + "image/png";
+					else if (file_type.compare("pdf") == 0)
+						servMsg = servMsg + "application/pdf";
+					else
+						servMsg = servMsg + "text/plain";
+
+					servMsg = servMsg + "\r\n";
+					servMsg = servMsg + "Content-Length: ";
+					servMsg = servMsg + std::to_string(file_content.length());
+					servMsg = servMsg + "\r\n";
+					servMsg = servMsg + file_content;
+					if (file_type.compare("csv") == 0 || file_type.compare("txt") == 0)
+						servMsg = servMsg + "\n";
+				}
+			}
+
+			servMsg = servMsg + "\r\n";
 
 			if (send(fds.at(i).fd, servMsg.c_str(), servMsg.length(), 0) < 0)
 				throw CustomException("Send failure: " + std::string(strerror(errno)));
