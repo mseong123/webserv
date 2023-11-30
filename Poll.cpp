@@ -6,7 +6,7 @@
 /*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/30 14:19:54 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/30 14:33:14 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks, std::v
 			std::cout << std::endl;
 			std::cout << "ROUTE: " << route << std::endl;
 			std::cout << std::endl;
-			target = "/static-site";
+			target = "/static-site/";
 			if (route.compare(0, target.length(), target) != 0)
 			{
 				servMsg = "HTTP/1.1 200 \r\nContent-Type: text/html\r\n";
