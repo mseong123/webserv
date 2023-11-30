@@ -6,7 +6,7 @@
 /*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 16:28:40 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/28 12:14:26 by melee            ###   ########.fr       */
+/*   Updated: 2023/11/30 09:09:13 by melee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void Request::parse_host(size_t *pos)
 	this->_host = this->_data.substr(*pos, temp_pos - *pos);
 	size_t temp_pos2 = temp_pos + 1;
 	temp_pos = this->_data.find_first_of("\n", temp_pos2);
-	this->_port = this->_data.substr(temp_pos2, temp_pos - temp_pos2);
+	this->_port = this->_data.substr(temp_pos2, temp_pos - temp_pos2 - 1);
 }
 
 void Request::parse_content_length(size_t *pos)

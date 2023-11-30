@@ -1,7 +1,8 @@
 server {
 	listen localhost:8000;
+	server_name 127.0.0.1;
 	location /{
-
+		
 	}
 	location /{
 
@@ -12,19 +13,58 @@ server {
 
 server {
 	listen localhost:8001;
+server_name localhost;
+client_max_body_size 1;
 	location /{
+		cgi_pass hello;
 
 	}
-	location /{
-
-	}
-
 	
 }
 
+server {
+	listen localhost:8002;
+server_name mseong1;
 
+error_pages 404 abc;
 
+location / {
+	root ../;
+	index mseong.html;
+	index ms.html;
+	index mseong1.html;
+	
+}
+}
 
+server {
+	listen localhost:8002;
+server_name mseong2;
+location /{
 
+	}
+}
 
+server {
+	listen localhost:8001;
+server_name localhost1;
+location / {
 
+	}
+}
+
+server {
+	listen localhost:8002;
+server_name mseong;
+location /{
+
+	}
+}
+
+server {
+	listen localhost:8001;
+server_name mseong.abz;
+location /{
+
+	}
+}

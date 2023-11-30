@@ -6,7 +6,7 @@
 /*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/29 19:31:29 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/30 16:37:45 by melee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,16 +87,7 @@ void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks, std::v
 
 			conn.get_request().parse_request_data();
 			conn.get_response().parse_response_data(conn.get_request(), servers);
-			//std::cout << conn.get_request() << std::endl;
-			std::string	servMsg;
-
-			servMsg = "HTTP/1.1 200 \r\nContent-Type: text/html\r\n";
-			servMsg = servMsg + "\r\n\r\n";
-			servMsg = servMsg + "<html><header><title>Go!</title>";
-			servMsg = servMsg + "</header><body><p>You did it!</p>";
-			servMsg = servMsg + "</body></html>";
-
-			if (send(fds.at(i).fd, servMsg.c_str(), servMsg.length(), 0) < 0)
+			if (send(fds.at(i).fd, conn.get_response().get_data().c_str(), conn.get_response().get_data().length(), 0) < 0)
 				throw CustomException("Send failure: " + std::string(strerror(errno)));
 			std::cout << "Response sent." << std::endl;
 

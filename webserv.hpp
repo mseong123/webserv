@@ -13,6 +13,7 @@
 # include <map>
 # include <algorithm>
 # include <stdio.h>
+# include <dirent.h>
 
 // class headers
 # include "CustomException.hpp"
@@ -30,5 +31,6 @@
 
 # define DEFAULT_CONFIG "default_config"
 # define RECV_BUFFER_SIZE 1024
+# define HTTP_PROTOCOL "HTTP/1.1"
 
 #endif
