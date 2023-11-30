@@ -6,11 +6,12 @@
 /*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/30 14:33:14 by yetay            ###   ########.fr       */
+/*   Updated: 2023/11/30 17:18:05 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserv.hpp"
+#include <dirent.h>
 
 /* Initialisation for static attributes */
 std::vector<struct pollfd>	Poll::fds;
@@ -111,61 +112,110 @@ void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks, std::v
 				std::string	filename;
 				std::string	line_to_serve;
 
-				filename = target.substr(1);
-				if (route.compare(target) == 0)
-					filename = filename + "/index.html";
-				else
-					filename = filename + route.substr(target.length());
-				std::cout << filename << std::endl;
-				
-				std::ifstream	file_to_serve(filename);
+				filename = route.substr(1);
+				if (route.back() == '/')
+				{ // SERVE DIRECTORY LISTING
+					DIR				*dir = opendir(filename.c_str());
+					struct dirent	*dp;
 
-				servMsg = "HTTP/1.1 ";
-				if (file_to_serve.is_open() == false)
-				{
 					servMsg = "HTTP/1.1 404 \r\nContent-Type: text/html\r\n";
 					servMsg = servMsg + "\r\n\r\n";
 					servMsg = servMsg + "<html><header><title>Error: 404";
 					servMsg = servMsg + "</title></header><body><h1>404</h1>";
 					servMsg = servMsg + "<p>File not found.</p>";
 					servMsg = servMsg + "</body></html>";
+					if (dir != NULL)
+					{
+						std::string	file_content;
+
+						servMsg = "HTTP/1.1 200 \r\n";
+						servMsg = servMsg + "Content-Type: text/html\r\n";
+
+						file_content = "<html><header><title>";
+						file_content += filename;
+						file_content += "</title></header>";
+						file_content += "<body><h1>";
+						file_content += filename;
+						file_content += "</h1>";
+						dp = readdir(dir);
+						while (dp != NULL)
+						{
+							std::string	fn = filename + dp->d_name;
+							DIR			*tmp = opendir(fn.c_str());
+
+							file_content += "<p><a href='";
+							file_content += dp->d_name;
+							if (tmp != NULL)
+								file_content += "/";
+							file_content += "'>";
+							file_content += dp->d_name;
+							if (tmp != NULL)
+								file_content += "/";
+							file_content += "</a></p>";
+							if (tmp != NULL)
+								closedir(tmp);
+							dp = readdir(dir);
+						}
+						file_content += "</body></html>";
+
+						servMsg += "Content-Length: ";
+						servMsg += std::to_string(file_content.length());
+						servMsg += "\r\n\r\n";
+						servMsg += file_content;
+					}
+					closedir(dir);
 				}
 				else
 				{
-					std::string	file_content;
-					std::string	file_type;
+					std::ifstream	file_to_serve(filename);
 
-					file_content = "";
-					while (getline(file_to_serve, line_to_serve))
-						file_content = file_content + "\n" + line_to_serve;
-
-					file_to_serve.close();
-
-					file_type = filename.substr(filename.find_last_of(".") + 1);
-					std::cout << file_type << std::endl;
-
-					servMsg = servMsg + "200 \r\n";
-					servMsg = servMsg + "Content-Type: ";
-					if (file_type.compare("html") == 0)
-						servMsg = servMsg + "text/html";
-					else if (file_type.compare("css") == 0)
-						servMsg = servMsg + "text/css";
-					else if (file_type.compare("jpg") == 0)
-						servMsg = servMsg + "image/jpeg";
-					else if (file_type.compare("png") == 0)
-						servMsg = servMsg + "image/png";
-					else if (file_type.compare("pdf") == 0)
-						servMsg = servMsg + "application/pdf";
+					servMsg = "HTTP/1.1 ";
+					if (file_to_serve.is_open() == false)
+					{
+						servMsg = "HTTP/1.1 404 \r\nContent-Type: text/html\r\n";
+						servMsg = servMsg + "\r\n\r\n";
+						servMsg = servMsg + "<html><header><title>Error: 404";
+						servMsg = servMsg + "</title></header><body><h1>404</h1>";
+						servMsg = servMsg + "<p>File not found.</p>";
+						servMsg = servMsg + "</body></html>";
+					}
 					else
-						servMsg = servMsg + "text/plain";
+					{
+						std::string	file_content;
+						std::string	file_type;
 
-					servMsg = servMsg + "\r\n";
-					servMsg = servMsg + "Content-Length: ";
-					servMsg = servMsg + std::to_string(file_content.length());
-					servMsg = servMsg + "\r\n";
-					servMsg = servMsg + file_content;
-					if (file_type.compare("csv") == 0 || file_type.compare("txt") == 0)
-						servMsg = servMsg + "\n";
+						file_content = "";
+						while (getline(file_to_serve, line_to_serve))
+							file_content = file_content + "\n" + line_to_serve;
+
+						file_to_serve.close();
+
+						file_type = filename.substr(filename.find_last_of(".") + 1);
+						std::cout << file_type << std::endl;
+
+						servMsg = servMsg + "200 \r\n";
+						servMsg = servMsg + "Content-Type: ";
+						if (file_type.compare("html") == 0)
+							servMsg = servMsg + "text/html";
+						else if (file_type.compare("css") == 0)
+							servMsg = servMsg + "text/css";
+						else if (file_type.compare("jpg") == 0)
+							servMsg = servMsg + "image/jpeg";
+						else if (file_type.compare("png") == 0)
+							servMsg = servMsg + "image/png";
+						else if (file_type.compare("pdf") == 0)
+							servMsg = servMsg + "application/pdf";
+						else
+							servMsg = servMsg + "text/plain";
+
+						servMsg = servMsg + "\r\n";
+						servMsg = servMsg + "Content-Length: ";
+						servMsg = servMsg + std::to_string(file_content.length());
+						servMsg = servMsg + "\r\n";
+						servMsg = servMsg + file_content;
+						if (file_type.compare("csv") == 0 || file_type.compare("txt") == 0)
+							servMsg = servMsg + "\n";
+					}
 				}
 			}
 
