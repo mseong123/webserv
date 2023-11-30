@@ -124,6 +124,8 @@ void ConfigServer::parse_client_max_body_size(size_t *pos, Server & server, std:
 		{
 			if (file_content.substr(*pos, temp_pos - *pos).find_first_not_of("0123456789") != std::string::npos)
 				throw CustomException("CONFIG_FILE_ERROR: Insert only integer values in client_max_body_size");
+			else if (file_content.substr(*pos, temp_pos - *pos).length() > 19)
+				throw CustomException("CONFIG_FILE_ERROR: client_max_body_size max value exceeded");
 			else {
 				server.set_client_max_body_size(file_content.substr(*pos, temp_pos - *pos));
 				*pos = temp_pos;
@@ -158,7 +160,7 @@ void ConfigServer::parse_error_pages(size_t *pos, Server & server, std::string f
 						throw CustomException("CONFIG_FILE_ERROR: Incorrect custom error_pages value");
 				else {
 					parse_whitespace(&delim_pos, error_pages_string);
-					if ((error_pages_directory = error_pages_string.substr(delim_pos, std::string::npos)).find_first_of(" \t") != std::string::npos || error_pages_directory[0] != '/')
+					if ((error_pages_directory = error_pages_string.substr(delim_pos, std::string::npos)).find_first_of(" \t") != std::string::npos)
 							throw CustomException("CONFIG_FILE_ERROR: Incorrect custom error_pages directory value");
 					else {
 						error_page.first = error_pages_value;
@@ -189,8 +191,8 @@ void ConfigServer::parse_server_block(size_t *pos, std::vector<Server> & _server
 				*pos += 6;
 				this->parse_listen(pos, server, file_content);
 			}
-		else if (file_content.substr(*pos, 12) == "server_name") {
-				*pos += 12;
+		else if (file_content.substr(*pos, 11) == "server_name") {
+				*pos += 11;
 				this->parse_server_name(pos, server, file_content);
 			}
 		else if (file_content.substr(*pos, 20) == "client_max_body_size") {

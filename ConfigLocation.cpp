@@ -191,7 +191,7 @@ void ConfigLocation::parse_location_block(size_t *pos, std::vector<Location> & _
 	
 	parse_whitespace(pos, file_content);
 	if (file_content[*pos] != '/') 
-		throw CustomException("CONFIG_FILE_ERROR: Incorrect route in location block");
+		throw CustomException("CONFIG_FILE_ERROR: Incorrect route in location block (need to start with /)");
 	else {
 		temp_pos = file_content.find_first_of(" \t{", *pos);
 		if (temp_pos != std::string::npos)
