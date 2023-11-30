@@ -106,9 +106,8 @@ std::string	Response::parse_resource_path(Request & request, Location & location
 }
 
 void Response::parse_resource(std::string path) {
-	std::ifstream	resource(path);
+	std::fstream	resource(path);
 	if (resource.is_open()) {
-		
 		std::string	resource_content;
 		std::string	resouce_type;
 		std::string line;
@@ -124,6 +123,8 @@ void Response::parse_resource(std::string path) {
 			this->_data += "text/html";
 		else if (resouce_type.compare("css") == 0)
 			this->_data += "text/css";
+		else if (resouce_type.compare("js") == 0)
+			this->_data += "text/javascript";
 		else if (resouce_type.compare("jpg") == 0)
 			this->_data += "image/jpeg";
 		else if (resouce_type.compare("png") == 0)
@@ -142,6 +143,10 @@ void Response::parse_resource(std::string path) {
 			this->_data += "\n";
 		this->_data += "\r\n";
 	}
+}
+
+void Response::handle_DELETE(std::string path) {
+	(void)path;
 }
 
 
@@ -196,8 +201,26 @@ void	Response::parse_POST_method(Request & request, Server & virtual_server) {
 			}
 		}
 	}
+}
 
+void	Response::parse_DELETE_method(Request & request, Server & virtual_server) {
+	Location * location = this->parse_location(request, virtual_server);
 
+	if (location == NULL)
+		this->parse_error_pages("403", "Forbidden", virtual_server);
+	else {
+		std::string resource_path = parse_resource_path(request, *location);
+		if (resource_path[resource_path.length() - 1] == '/')
+				this->parse_error_pages("403", "Forbidden", virtual_server);
+		else {
+			std::vector<std::string>::iterator it = location->get_allowed_methods().begin();
+			std::vector<std::string>::iterator ite = location->get_allowed_methods().end();
+			if (std::find(it, ite, "DELETE") == ite)
+				this->parse_error_pages("405", "METHOD NOT ALLOWED", virtual_server);
+			else
+				this->handle_DELETE(resource_path);
+		}
+	}
 }
 
 void	Response::parse_response_data(Request & request, std::vector<Server> & servers)
@@ -208,4 +231,8 @@ void	Response::parse_response_data(Request & request, std::vector<Server> & serv
 		this->parse_GET_method(request, virtual_server);
 	else if (request.get_method() == "POST")
 		this->parse_POST_method(request, virtual_server);
+	else if (request.get_method() == "DELETE")
+		this->parse_DELETE_method(request, virtual_server);
+	else
+		this->parse_error_pages("405", "Method Not Allowed", virtual_server);
 }

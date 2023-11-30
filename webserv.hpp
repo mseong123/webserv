@@ -14,6 +14,8 @@
 # include <algorithm>
 # include <stdio.h>
 # include <dirent.h>
+# include <sys/stat.h>
+# include <ctime>
 
 // class headers
 # include "CustomException.hpp"
