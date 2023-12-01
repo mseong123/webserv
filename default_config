@@ -22,7 +22,6 @@ server {
 		autoindex on;
 		allowed_methods DELETE;
 	}
-	
 }
 
 server {
