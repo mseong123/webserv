@@ -89,11 +89,22 @@ Location *	Response::parse_location(Request & request, Server & virtual_server) 
 	std::vector<Location>::iterator ite = virtual_server.get_location().end();
 	std::string req = request.get_route();
 	std::string req_path = req.substr(0, req.substr(1, req.length()).find_last_of("/") != std::string::npos? req.substr(1, req.length()).find_last_of("/") + 1 : 1);
+	int found = 0;
+	int index = 0;
+	
 	for (; it != ite; it++) {
-		if (it->get_route() == req_path.substr(0, it->get_route().length()))
-			return &(*it);
+		if (it->get_route() == req_path.substr(0, it->get_route().length())) {
+			found = 1;
+			if (it->get_route() == req_path)
+				return &(*it); 
+		}
+		if (!found)
+			index++;
 	}
-	return NULL;
+	if (found)
+		return &(virtual_server.get_location()[index]);
+	else
+		return NULL;
 }
 
 std::string	Response::parse_resource_path(Request & request, Location & location) {
@@ -145,11 +156,132 @@ void Response::parse_resource(std::string path) {
 	}
 }
 
-void Response::handle_DELETE(std::string path) {
-	(void)path;
+std::string Response::parse_autoindex_css() {
+	std::string css;
+
+	css += "body {\n\tmargin: 0 auto;\n\twidth: 75vw;\n\tfont-family: \"Courier New\", fixed;\n\tfont-size: 16pt;\n}\n";
+	css += "hi {\n\tmargin: 42px 0 14px;\n}\n";
+	css += "div.dls {\n\tmargin-top: 16px;\n\tpadding-top: 16px;\n}\n";
+	css += "hr {\n\tmargin: 16 0;\n\tborder-top: 2px solid black;\n}\n";
+	css += "div.row {\n\tdisplay: flex;\n\tmargin: 4px 0;\n}\n";
+	css += "div.fn {\n\twidth: 40%;\n}\n";
+	css += "div.tm {\n\twidth: 35%;\n}\n";
+	css += "div.size {\n\twidth: 15%;\n\ttext-align: right;\n}\n";
+	return css;
+}
+
+void 	Response::parse_autoindex(std::string path, std::string route, Server & virtual_server) {
+	DIR				*dir = opendir(path.c_str());
+	struct dirent	*dp;
+	std::string		line;
+
+	if (dir != NULL)
+	{
+		std::string	dir_content;
+		std::string dirname = route.substr(1);
+
+		this->_data = "HTTP/1.1 200 OK\r\n";
+		this->_data = this->_data + "Content-Type: text/html\r\n";
+
+		dir_content = "<html><header><title>";
+		dir_content += dirname;
+		dir_content += "</title><style>";
+		dir_content += parse_autoindex_css();
+		dir_content += "</style></header>";
+		dir_content += "<body><h1>Index of ";
+		dir_content += dirname;
+		dir_content += "</h1><div class='dls'>";
+		dir_content += "<div class='row'>";
+		dir_content += "<div class='fn'>Filename</div>";
+		dir_content += "<div class='tm'>Last Modified</div>";
+		dir_content += "<div class='size'>File Size</div>";
+		dir_content += "</div><hr />";
+
+		dp = readdir(dir);
+		while (dp != NULL)
+		{
+			if (std::string(dp->d_name).compare(".") != 0)
+			{
+				std::string	fn = dirname + dp->d_name;
+				DIR			*tmp = opendir(fn.c_str());
+				struct stat	fs;
+				struct tm	*tm;
+				char		dt[1024];
+
+				memset(&dt, 0, sizeof(dt));
+				dir_content += "<div class='row'>";
+
+				dir_content += "<div class='fn'><a href='";
+				dir_content += dp->d_name;
+				if (tmp != NULL)
+					dir_content += "/";
+				dir_content += "'>";
+				dir_content += dp->d_name;
+				if (tmp != NULL)
+					dir_content += "/";
+				dir_content += "</a></div>";
+
+				stat(fn.c_str(), &fs);
+				tm = localtime(&fs.st_mtime);
+				strftime(dt, sizeof(dt), "%x %r", tm);
+				dir_content += "<div class='tm'>";
+				dir_content += dt;
+				dir_content += "</div>";
+
+				dir_content += "<div class='size'>";
+				if (tmp != NULL)
+					dir_content += "-";
+				else if (stat(fn.c_str(), &fs) == 0)
+				{
+					std::string	unit;
+					size_t		size = fs.st_size;
+
+					if (size > 1000000000000)
+					{
+						size /= 1000000000;
+						unit = "g";
+					}
+					else if (size > 1000000000)
+					{
+						size /= 1000000;
+						unit = "m";
+					}
+					else if (size > 1000000)
+					{
+						size /= 1000;
+						unit = "k";
+					}
+					else
+						unit = "";
+					dir_content += std::to_string(size);
+					dir_content += unit;
+				}
+				dir_content += "</div>";
+
+				dir_content += "</div>";
+
+				if (tmp != NULL)
+					closedir(tmp);
+			}
+			dp = readdir(dir);
+		}
+		dir_content += "</div></body></html>";
+
+		this->_data += "Content-Length: ";
+		this->_data += std::to_string(dir_content.length());
+		this->_data += "\r\n\r\n";
+		this->_data += dir_content;
+		closedir(dir);
+	}
+	else 
+		this->parse_error_pages("403", "Forbidden", virtual_server);
 }
 
 
+void Response::handle_DELETE(std::string path) {
+	//TO DO
+	(void)path;
+}
 
 void	Response::parse_GET_method(Request & request, Server & virtual_server) {
 	Location * location = this->parse_location(request, virtual_server);
@@ -159,8 +291,12 @@ void	Response::parse_GET_method(Request & request, Server & virtual_server) {
 	else {
 		std::string resource_path = parse_resource_path(request, *location);
 		if (resource_path[resource_path.length() - 1] == '/') {
-			if (location->get_index().size() == 0) 
-				this->parse_error_pages("404", "Not Found", virtual_server);
+			if (location->get_index().size() == 0) {
+				if (location->get_autoindex())
+					this->parse_autoindex(resource_path, request.get_route(), virtual_server);
+				else
+					this->parse_error_pages("404", "Not Found", virtual_server);
+			}
 			else {
 				std::vector<std::string>::iterator it = location->get_index().begin();
 				std::vector<std::string>::iterator ite = location->get_index().end();

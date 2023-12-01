@@ -1,73 +1,71 @@
 server {
 	listen localhost:8000;
-	server_name webserv.abc;
+	server_name melee.42.fr;
 	location /{
+		autoindex on;
 		root ./;
 	}
-	location /{
-
-	}
-
-	
 }
 
 server {
 	listen localhost:8001;
 	server_name webserv.def;
 	client_max_body_size 1;
-	location /{
+	location / {
 		root ./;
 		index index.html;
 		allowed_methods DELETE;
-		cgi_pass hello;
-
+		cgi_pass /cgi;
+	}
+	location /webpage{
+		root ./;
+		autoindex on;
+		allowed_methods DELETE;
 	}
 	
 }
 
 server {
 	listen localhost:8002;
-server_name mseong1;
-
-error_pages 404 abc;
-
-location / {
-	root ../;
-	index mseong.html;
-	index ms.html;
-	index mseong1.html;
-	
-}
-}
-
-server {
-	listen localhost:8002;
-server_name mseong2;
-location /{
-
-	}
-}
-
-server {
-	listen localhost:8001;
-server_name localhost1;
-location / {
-
+	server_name mseong1;
+	error_pages 404 abc;
+	location / {
+		root ../;
+		index mseong.html;
+		index ms.html;
+		index mseong1.html;
+		
 	}
 }
 
 server {
 	listen localhost:8002;
-server_name mseong;
-location /{
+	server_name mseong2;
+	location /{
 
-	}
+		}
 }
 
 server {
 	listen localhost:8001;
-server_name mseong.abz;
-location /{
+	server_name localhost1;
+	location / {
 
-	}
+		}
+}
+
+server {
+	listen localhost:8002;
+	server_name mseong;
+	location /{
+
+		}
+}
+
+server {
+	listen localhost:8001;
+	server_name mseong.abz;
+	location /{
+
+		}
 }

@@ -17,6 +17,8 @@ class	Response {
 		Location *	parse_location(Request & request, Server & virtual_server);
 		std::string	parse_resource_path(Request & request, Location & location);
 		void 	parse_resource(std::string path);
+		std::string parse_autoindex_css();
+		void 	parse_autoindex(std::string path, std::string route, Server & virtual_server);
 		void 	handle_DELETE(std::string path);
 		void	parse_GET_method(Request & request, Server & virtual_server);
 		void	parse_POST_method(Request & request, Server & virtual_server);
