@@ -19,7 +19,8 @@ class	Response {
 		void 	parse_resource(std::string path);
 		std::string parse_autoindex_css();
 		void 	parse_autoindex(std::string path, std::string route, Server & virtual_server);
-		void 	handle_DELETE(std::string path);
+		void 	handle_DELETE(std::string path, Server & virtual_server);
+		void 	handle_return(std::string return_route);
 		void	parse_GET_method(Request & request, Server & virtual_server);
 		void	parse_POST_method(Request & request, Server & virtual_server);
 		void	parse_DELETE_method(Request & request, Server & virtual_server);

@@ -119,8 +119,8 @@ void ConfigLocation::parse_root(size_t *pos, Location & location, std::string fi
 		if (temp_pos != std::string::npos)
 		{
 			std::string path = file_content.substr(*pos, temp_pos - *pos);
-			if (path.find_first_of(" \t") != std::string::npos)
-				throw CustomException("CONFIG_FILE_ERROR: Incorrect value in root directive");
+			if (path.find_first_of(" \t") != std::string::npos || path[0] != '/')
+				throw CustomException("CONFIG_FILE_ERROR: Incorrect value in root directive (need to start with /)");
 			else {
 				location.set_root(path);
 				*pos = temp_pos;
