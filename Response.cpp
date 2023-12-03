@@ -108,7 +108,7 @@ Location *	Response::parse_location(Request & request, Server & virtual_server) 
 }
 
 std::string	Response::parse_resource_path(Request & request, Location & location) {
-	std::string resource_path;
+	std::string resource_path = ".";
 
 	if (location.get_root() != "")
 		resource_path += location.get_root();
@@ -277,10 +277,37 @@ void 	Response::parse_autoindex(std::string path, std::string route, Server & vi
 		this->parse_error_pages("403", "Forbidden", virtual_server);
 }
 
+void Response::handle_return(std::string return_route) {
+	std::string return_content = "<html>\n<head><title>307 Temporary Redirect</title></head>\n<body>\n<center><h1>307 Temporary Redirect</h1></center>\n</body>\n</html>";
 
-void Response::handle_DELETE(std::string path) {
-	//TO DO
-	(void)path;
+	this->_data += "HTTP/1.1 307 Temporary Redirect\r\n";
+	this->_data += "Location: " + return_route + "\r\n";
+	this->_data += "Content-Type: text/html\r\n";
+	this->_data += "Content-Length: " + std::to_string(return_content.length()) + "\r\n";
+	this->_data += "Location: " + return_route + "\r\n";
+	this->_data += "\r\n";
+	this->_data += return_content;
+	this->_data += "\r\n";
+	
+}
+
+void Response::handle_DELETE(std::string path, Server & virtual_server) {
+	if (remove(path.c_str()) == -1) {
+		if (errno == ENOENT) 
+			this->parse_error_pages("404", "Not Found", virtual_server);
+		else
+			this->parse_error_pages("500", "Internal Server Error", virtual_server);
+	}
+	else {
+		std::string response_content = "<html>\n<head><title>200 OK</title></head>\n<body>\n<center><h1>200 OK</h1></center>\n</body>\n</html>";
+		this->_data += "HTTP/1.1 200 OK\r\n";
+		this->_data += "Content-Type: text/html\r\n";
+		this->_data += "Content-Length: " + std::to_string(response_content.length()) + "\r\n";
+		this->_data += "\r\n";
+		this->_data += response_content;
+		this->_data += "\r\n";
+	}
+
 }
 
 void	Response::parse_GET_method(Request & request, Server & virtual_server) {
@@ -290,7 +317,9 @@ void	Response::parse_GET_method(Request & request, Server & virtual_server) {
 		this->parse_error_pages("403", "Forbidden", virtual_server);
 	else {
 		std::string resource_path = parse_resource_path(request, *location);
-		if (resource_path[resource_path.length() - 1] == '/') {
+		if ((*location).get_return() != "") 
+			this->handle_return((*location).get_return());
+		else if (resource_path[resource_path.length() - 1] == '/') {
 			if (location->get_index().size() == 0) {
 				if (location->get_autoindex())
 					this->parse_autoindex(resource_path, request.get_route(), virtual_server);
@@ -323,11 +352,13 @@ void	Response::parse_POST_method(Request & request, Server & virtual_server) {
 		this->parse_error_pages("403", "Forbidden", virtual_server);
 	else {
 		std::string resource_path = parse_resource_path(request, *location);
-		if (resource_path[resource_path.length() - 1] == '/')
+		if ((*location).get_return() != "") 
+			this->handle_return((*location).get_return());
+		else if (resource_path[resource_path.length() - 1] == '/')
 				this->parse_error_pages("403", "Forbidden", virtual_server);
 		else {
 			if (location->get_cgi_pass() == "")
-				this->parse_error_pages("403", "Forbidden", virtual_server);
+				this->parse_error_pages("405", "Method not allowed ", virtual_server);
 			else if (request.get_content_length() != "" && virtual_server.get_client_max_body_size() != "" && \
 			std::stoll(request.get_content_length()) > std::stoll(virtual_server.get_client_max_body_size()))
 				this->parse_error_pages("413", "Payload Too Large", virtual_server);
@@ -346,15 +377,15 @@ void	Response::parse_DELETE_method(Request & request, Server & virtual_server) {
 		this->parse_error_pages("403", "Forbidden", virtual_server);
 	else {
 		std::string resource_path = parse_resource_path(request, *location);
-		if (resource_path[resource_path.length() - 1] == '/')
-				this->parse_error_pages("403", "Forbidden", virtual_server);
+		if ((*location).get_return() != "") 
+			this->handle_return((*location).get_return());
 		else {
 			std::vector<std::string>::iterator it = location->get_allowed_methods().begin();
 			std::vector<std::string>::iterator ite = location->get_allowed_methods().end();
 			if (std::find(it, ite, "DELETE") == ite)
-				this->parse_error_pages("405", "METHOD NOT ALLOWED", virtual_server);
+				this->parse_error_pages("405", "Method not allowed", virtual_server);
 			else
-				this->handle_DELETE(resource_path);
+				this->handle_DELETE(resource_path, virtual_server);
 		}
 	}
 }
