@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Connection.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+        */
+/*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:42:10 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/29 19:18:44 by yetay            ###   ########.fr       */
+/*   Updated: 2023/12/03 19:26:04 by melee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	Connection::serv_listen(std::string host, std::string port, struct addrinfo 
 		throw CustomException("Getaddrinfo failure: " + std::string(gai_strerror(errno)));
 	if (bind(sockfd, res->ai_addr, res->ai_addrlen) < 0)
 		throw CustomException("Bind failure: " + std::string(strerror(errno)));
-	if (listen(sockfd, 3) < 0)
+	if (listen(sockfd, LISTEN_BACKLOG) < 0)
 		throw CustomException("Listen failure: " + std::string(strerror(errno)));
 
 	std::cout << "Listening on port " << sockfd << "." << std::endl;

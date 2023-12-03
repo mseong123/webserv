@@ -3,14 +3,10 @@ server {
 	server_name _;
 	
 	
-	location /{
-		index index.html;
-		root /webpage;
-		return https://wikipedia.com;
+	location / {
+		index test.html;
+		root /siege;
 		
-	}
-	location /delete {
-		allowed_methods DELETE;
 		
 	}
 }
