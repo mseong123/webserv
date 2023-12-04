@@ -32,6 +32,11 @@ std::string	Response::get_data(void) const
 	return (this->_data);
 }
 
+void	Response::set_data(std::string data)
+{
+	this->_data = data;
+}
+
 Server 	& Response::parse_virtual_server(Request & request, std::vector<Server> & servers) {
 	std::vector<Server>::iterator it = servers.begin();
 	std::vector<Server>::iterator ite = servers.end();
@@ -57,7 +62,8 @@ std::string 	Response::parse_custom_error_pages(std::string error, std::map<std:
 
 	for (; it != ite; it++) {
 		if (it->first == error) {
-			std::fstream fs(it->second, std::fstream::in);
+			std::string path = "." + it->second;
+			std::fstream fs(path, std::fstream::in);
 			if (fs.is_open())
 				while(std::getline(fs, buffer, '\n'))
 					temp_message_body += buffer;
@@ -363,8 +369,8 @@ void	Response::parse_POST_method(Request & request, Server & virtual_server) {
 			std::stoll(request.get_content_length()) > std::stoll(virtual_server.get_client_max_body_size()))
 				this->parse_error_pages("413", "Payload Too Large", virtual_server);
 			else {
-				//SEARCH FOR CGI_PASS DIRECTORY (IF NOT ERROR 404 NOT FOUND)
-				std::cout << "HANDLE CGI" << std::endl;
+				CgiHandler cgi;
+				cgi.handle_cgi(request, *this, virtual_server, *location);
 			}
 		}
 	}

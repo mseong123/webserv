@@ -6,7 +6,7 @@
 #    By: melee <melee@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/20 13:12:42 by yetay             #+#    #+#              #
-#    Updated: 2023/11/28 18:37:53 by melee            ###   ########.fr        #
+#    Updated: 2023/12/04 12:30:55 by melee            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ SRCS = main.cpp CustomException.cpp HTTP.cpp \
 	   Config.cpp Server.cpp Location.cpp \
 	   ConfigServer.cpp ConfigLocation.cpp \
        Request.cpp Response.cpp Connection.cpp \
-	   Poll.cpp
+	   Poll.cpp CgiHandler.cpp
 OBJS = $(SRCS:%.cpp=obj/%.o)
 
 .PHONY: all \

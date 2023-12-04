@@ -10,6 +10,7 @@ class	Response {
 		~Response(void);
 		Response const	&operator=(Response const &cls);
 		std::string	get_data(void) const;
+		void	set_data(std::string data);
 		Server & parse_virtual_server(Request & request, std::vector<Server> & servers);
 		std::string parse_custom_error_pages(std::string error, std::map<std::string, std::string> & error_pages);
 		void 	parse_error_pages(std::string error, std::string description, Server & virtual_server);

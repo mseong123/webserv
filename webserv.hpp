@@ -31,6 +31,7 @@
 # include "Response.hpp"
 # include "Connection.hpp"
 # include "Poll.hpp"
+# include "CgiHandler.hpp"
 
 
 

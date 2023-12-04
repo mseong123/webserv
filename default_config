@@ -2,12 +2,8 @@ server {
 	listen localhost:8010;
 	server_name _;
 	
-	
 	location / {
-		index test.html;
-		root /siege;
-		
-		
+		cgi_pass /cgi;
 	}
 }
 

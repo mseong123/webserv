@@ -160,8 +160,8 @@ void ConfigServer::parse_error_pages(size_t *pos, Server & server, std::string f
 						throw CustomException("CONFIG_FILE_ERROR: Incorrect custom error_pages value");
 				else {
 					parse_whitespace(&delim_pos, error_pages_string);
-					if ((error_pages_directory = error_pages_string.substr(delim_pos, std::string::npos)).find_first_of(" \t") != std::string::npos)
-							throw CustomException("CONFIG_FILE_ERROR: Incorrect custom error_pages directory value");
+					if ((error_pages_directory = error_pages_string.substr(delim_pos, std::string::npos)).find_first_of(" \t") != std::string::npos || error_pages_directory[0] != '/')
+							throw CustomException("CONFIG_FILE_ERROR: Incorrect custom error_pages directory value (need to start with /)");
 					else {
 						error_page.first = error_pages_value;
 						error_page.second = error_pages_directory;
