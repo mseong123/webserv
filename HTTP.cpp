@@ -18,13 +18,13 @@ void HTTP::init(const std::string path) {
 		int				sockfd;
 		struct addrinfo	sockai;
 
-		std::cout << it->first << ":" << it->second << std::endl;
+		// std::cout << it->first << ":" << it->second << std::endl;
 		sockfd = Connection::serv_listen(it->first, it->second, &sockai);
 		Poll::add_fd(sockfd, POLLIN | POLLPRI);
 		socks.push_back(std::pair<int, struct addrinfo>(sockfd, sockai));
 	}
 
-	std::cout << Poll::fds << std::endl;
+	// std::cout << Poll::fds << std::endl;
 
 	while (true)
 	{

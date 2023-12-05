@@ -6,7 +6,7 @@
 /*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 16:27:58 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/27 19:11:55 by melee            ###   ########.fr       */
+/*   Updated: 2023/12/05 11:29:09 by melee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,7 @@ class	Request
 {
 	public:
 		Request(void);
-		Request(Request const &cls);
 		~Request(void);
-
-		Request const	&operator=(Request const &cls);
-
 		std::string	get_data(void) const;
 		std::string	get_method(void) const;
 		std::string	get_route(void) const;

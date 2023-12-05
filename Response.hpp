@@ -6,9 +6,7 @@
 class	Response {
 	public:
 		Response(void);
-		Response(Response const &cls);
 		~Response(void);
-		Response const	&operator=(Response const &cls);
 		std::string	get_data(void) const;
 		void	set_data(std::string data);
 		Server & parse_virtual_server(Request & request, std::vector<Server> & servers);

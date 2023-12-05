@@ -6,7 +6,7 @@
 /*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 16:28:40 by yetay             #+#    #+#             */
-/*   Updated: 2023/11/30 09:09:13 by melee            ###   ########.fr       */
+/*   Updated: 2023/12/05 11:43:00 by melee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,24 +18,10 @@ Request::Request(void) : _data("")
 	return ;
 }
 
-/* Copy constructor */
-Request::Request(Request const &cls) : _data("")
-{
-	*this = cls;
-	return ;
-}
-
 /* Destructor */
 Request::~Request(void)
 {
 	return ;
-}
-
-/* Assignment operator overload */
-Request const	&Request::operator=(Request const &cls)
-{
-	this->_data = cls.get_data();
-	return (*this);
 }
 
 /* Getter: return value of _data */

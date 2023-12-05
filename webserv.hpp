@@ -18,6 +18,7 @@
 # include <ctime>
 # include <stdio.h>
 # include <fcntl.h>
+#include <sys/ioctl.h>
 
 // class headers
 # include "CustomException.hpp"
@@ -36,7 +37,7 @@
 
 
 # define DEFAULT_CONFIG "default_config"
-# define RECV_BUFFER_SIZE 1024
+# define RECV_BUFFER_SIZE 250
 # define HTTP_PROTOCOL "HTTP/1.1"
 # define LISTEN_BACKLOG 20000
 

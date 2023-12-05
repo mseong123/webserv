@@ -6,24 +6,10 @@ Response::Response(void) : _data("")
 	return ;
 }
 
-/* Copy constructor */
-Response::Response(Response const &cls) : _data("")
-{
-	*this = cls;
-	return ;
-}
-
 /* Destructor */
 Response::~Response(void)
 {
 	return ;
-}
-
-/* Assignment operator overload */
-Response const	&Response::operator=(Response const &cls)
-{
-	this->_data = cls.get_data();
-	return (*this);
 }
 
 /* Getter: return value of _data */
@@ -399,7 +385,7 @@ void	Response::parse_DELETE_method(Request & request, Server & virtual_server) {
 void	Response::parse_response_data(Request & request, std::vector<Server> & servers)
 {
 	Server & virtual_server = parse_virtual_server(request, servers);
-	
+
 	if (request.get_method() == "GET")
 		this->parse_GET_method(request, virtual_server);
 	else if (request.get_method() == "POST")

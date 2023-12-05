@@ -6,7 +6,7 @@
 /*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:42:10 by yetay             #+#    #+#             */
-/*   Updated: 2023/12/03 19:26:04 by melee            ###   ########.fr       */
+/*   Updated: 2023/12/05 14:48:15 by melee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	Connection::serv_listen(std::string host, std::string port, struct addrinfo 
 	if (listen(sockfd, LISTEN_BACKLOG) < 0)
 		throw CustomException("Listen failure: " + std::string(strerror(errno)));
 
-	std::cout << "Listening on port " << sockfd << "." << std::endl;
+	std::cout << "Listening on port " << port << "." << std::endl;
 
 	// Add socket to vector of listening-only sockets
 	listen_sockfds.push_back(sockfd);
@@ -80,8 +80,8 @@ int	Connection::serv_listen(std::string host, std::string port, struct addrinfo 
 /* Default constructor */
 Connection::Connection(void) : _sockfd(0)
 {
-	memset(&_request, 0, sizeof(_request));
-	memset(&_response, 0, sizeof(_response));
+	// memset(&_request, 0, sizeof(_request));
+	// memset(&_response, 0, sizeof(_response));
 	return ;
 }
 
