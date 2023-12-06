@@ -117,7 +117,7 @@ void Response::parse_resource(std::string path) {
 
 		while (getline(resource, line))
 			resource_content = resource_content + "\n" + line;
-
+		
 		resource.close();
 		resouce_type = path.substr(path.find_last_of(".") + 1);
 		this->_data += std::string(HTTP_PROTOCOL) + " 200 OK\r\n";
