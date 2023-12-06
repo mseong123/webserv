@@ -6,30 +6,21 @@ Response::Response(void) : _data("")
 	return ;
 }
 
-/* Copy constructor */
-Response::Response(Response const &cls) : _data("")
-{
-	*this = cls;
-	return ;
-}
-
 /* Destructor */
 Response::~Response(void)
 {
 	return ;
 }
 
-/* Assignment operator overload */
-Response const	&Response::operator=(Response const &cls)
-{
-	this->_data = cls.get_data();
-	return (*this);
-}
-
 /* Getter: return value of _data */
 std::string	Response::get_data(void) const
 {
 	return (this->_data);
+}
+
+void	Response::set_data(std::string data)
+{
+	this->_data = data;
 }
 
 Server 	& Response::parse_virtual_server(Request & request, std::vector<Server> & servers) {
@@ -57,7 +48,8 @@ std::string 	Response::parse_custom_error_pages(std::string error, std::map<std:
 
 	for (; it != ite; it++) {
 		if (it->first == error) {
-			std::fstream fs(it->second, std::fstream::in);
+			std::string path = "." + it->second;
+			std::fstream fs(path, std::fstream::in);
 			if (fs.is_open())
 				while(std::getline(fs, buffer, '\n'))
 					temp_message_body += buffer;
@@ -125,7 +117,7 @@ void Response::parse_resource(std::string path) {
 
 		while (getline(resource, line))
 			resource_content = resource_content + "\n" + line;
-
+		
 		resource.close();
 		resouce_type = path.substr(path.find_last_of(".") + 1);
 		this->_data += std::string(HTTP_PROTOCOL) + " 200 OK\r\n";
@@ -136,7 +128,7 @@ void Response::parse_resource(std::string path) {
 			this->_data += "text/css";
 		else if (resouce_type.compare("js") == 0)
 			this->_data += "text/javascript";
-		else if (resouce_type.compare("jpg") == 0)
+		else if (resouce_type.compare("jpg") == 0 || resouce_type.compare("jpeg") == 0)
 			this->_data += "image/jpeg";
 		else if (resouce_type.compare("png") == 0)
 			this->_data += "image/png";
@@ -337,6 +329,10 @@ void	Response::parse_GET_method(Request & request, Server & virtual_server) {
 					this->parse_error_pages("404", "Not Found", virtual_server);
 			}
 		}
+		else if (location->get_cgi_pass() != "") {
+				CgiHandler cgi;
+				cgi.handle_cgi(request, *this, virtual_server, *location);
+		}
 		else {
 			this->parse_resource(resource_path);
 			if (this->_data == "")
@@ -354,17 +350,17 @@ void	Response::parse_POST_method(Request & request, Server & virtual_server) {
 		std::string resource_path = parse_resource_path(request, *location);
 		if ((*location).get_return() != "") 
 			this->handle_return((*location).get_return());
-		else if (resource_path[resource_path.length() - 1] == '/')
-				this->parse_error_pages("403", "Forbidden", virtual_server);
+		// else if (resource_path[resource_path.length() - 1] == '/')
+		// 		this->parse_error_pages("403", "Forbidden", virtual_server);
 		else {
 			if (location->get_cgi_pass() == "")
 				this->parse_error_pages("405", "Method not allowed ", virtual_server);
 			else if (request.get_content_length() != "" && virtual_server.get_client_max_body_size() != "" && \
-			std::stoll(request.get_content_length()) > std::stoll(virtual_server.get_client_max_body_size()))
+			std::stoull(request.get_content_length()) > std::stoull(virtual_server.get_client_max_body_size()))
 				this->parse_error_pages("413", "Payload Too Large", virtual_server);
 			else {
-				//SEARCH FOR CGI_PASS DIRECTORY (IF NOT ERROR 404 NOT FOUND)
-				std::cout << "HANDLE CGI" << std::endl;
+				CgiHandler cgi;
+				cgi.handle_cgi(request, *this, virtual_server, *location);
 			}
 		}
 	}
@@ -393,7 +389,7 @@ void	Response::parse_DELETE_method(Request & request, Server & virtual_server) {
 void	Response::parse_response_data(Request & request, std::vector<Server> & servers)
 {
 	Server & virtual_server = parse_virtual_server(request, servers);
-	
+
 	if (request.get_method() == "GET")
 		this->parse_GET_method(request, virtual_server);
 	else if (request.get_method() == "POST")

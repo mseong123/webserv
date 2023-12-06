@@ -173,8 +173,8 @@ void ConfigLocation::parse_cgi_pass(size_t *pos, Location & location, std::strin
 		if (temp_pos != std::string::npos)
 		{
 			std::string path = file_content.substr(*pos, temp_pos - *pos);
-			if (path.find_first_of(" \t") != std::string::npos)
-				throw CustomException("CONFIG_FILE_ERROR: Incorrect value in cgi_pass directive");
+			if (path.find_first_of(" \t") != std::string::npos || path[0] != '/')
+				throw CustomException("CONFIG_FILE_ERROR: Incorrect value in cgi_pass directive (need to start with /)");
 			else {
 				location.set_cgi_pass(path);
 				*pos = temp_pos;

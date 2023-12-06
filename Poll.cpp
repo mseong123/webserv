@@ -6,7 +6,7 @@
 /*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/12/03 19:17:27 by melee            ###   ########.fr       */
+/*   Updated: 2023/12/06 07:46:42 by melee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks, std::v
 	{
 		if (fds.at(i).revents & POLLIN)
 		{
-			std::cout << "POLLIN: " << fds.at(i).fd << std::endl;
+			// std::cout << "POLLIN: " << fds.at(i).fd << std::endl;
 
 			if (Connection::is_listen_sockfd(fds.at(i).fd))
 			{
@@ -80,17 +80,15 @@ void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks, std::v
 			int			conn_ind = Connection::get_conn_index(fds.at(i).fd);
 			Connection	&conn = Connection::io_conn.at(conn_ind);
 
-			std::cout << "POLLOUT: " << fds.at(i).fd << std::endl;
+			// std::cout << "POLLOUT: " << fds.at(i).fd << std::endl;
 
 			if (conn.get_request().get_data().length() == 0)
 				continue;
-
 			conn.get_request().parse_request_data();
 			conn.get_response().parse_response_data(conn.get_request(), servers);
 			if (send(fds.at(i).fd, conn.get_response().get_data().c_str(), conn.get_response().get_data().length(), 0) < 0)
 				throw CustomException("Send failure: " + std::string(strerror(errno)));
-			std::cout << "Response sent." << std::endl;
-
+			// std::cout << "Response sent." << std::endl;
 			close_fd(i);
 			continue;
 		}
@@ -153,7 +151,7 @@ void	Poll::accept_sock(int fd, Connection &conn, struct addrinfo *res)
 	conn.set_sockfd(accept(fd, (struct sockaddr*) &res->ai_addr, &res->ai_addrlen));
 	if (conn.get_sockfd() < 0)
 		throw CustomException("Accept failure: " + std::string(strerror(errno)));
-	std::cout << conn.get_sockfd() << std::endl;
+	// std::cout << conn.get_sockfd() << std::endl;
 	add_fd(conn.get_sockfd(), POLLIN | POLLPRI);
 	return ;
 }
@@ -168,8 +166,7 @@ void	Poll::recv_data(int fd, Connection &conn)
 	if (recvstat < 0)
 		throw CustomException("Recv failure: " + std::string(strerror(errno)));
 	buffer[recvstat] = 0;
-	conn.get_request().set_data(conn.get_request().get_data() + std::string(buffer));
-	std::cout << conn.get_request().get_data() << std::endl;
+	conn.get_request().set_data(conn.get_request().get_data().append(buffer, recvstat));
 	update_fd(fd, POLLIN | POLLPRI | POLLOUT | POLLWRBAND);
 	return ;
 }
