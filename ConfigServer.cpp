@@ -46,6 +46,8 @@ void ConfigServer::parse_address(Server & server) {
 void ConfigServer::parse_listen(size_t *pos, Server & server, std::string file_content) {
 	size_t temp_pos = *pos;
 
+	if (server.get_host() != "")
+		throw CustomException("CONFIG_FILE_ERROR: Only 1 listen directive allowed in server block");
 	parse_whitespace(pos, file_content);
 	if (temp_pos == *pos)
 		throw CustomException("CONFIG_FILE_ERROR: need whitespace after listen keyword");
