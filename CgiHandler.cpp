@@ -6,23 +6,22 @@ CgiHandler::CgiHandler() {
 CgiHandler::~CgiHandler() {
 }
 
-std::string	CgiHandler::parse_cgi_path(Request & request, Location & location) {
+std::string	CgiHandler::parse_cgi_path(Location & location) {
 	std::string cgi_path = ".";
 
 	cgi_path += location.get_cgi_pass();
-	cgi_path += request.get_route();
 	return cgi_path;
 }
 
 std::string	CgiHandler::parse_cgi_output(int pipefd_output, int pipefd_error) {
-	char buffer;
+	char buffer[1024];
 	std::string output;
 	int rec_byte;
 
-	while ((rec_byte = read(pipefd_output, &buffer, 1)) != 0)
-		output += buffer;
-	while ((rec_byte = read(pipefd_error, &buffer, 1)) != 0)
-		output += buffer;
+	while ((rec_byte = read(pipefd_output, buffer, 1024)) != 0)
+		output.append(buffer, rec_byte);
+	while ((rec_byte = read(pipefd_error, buffer, 1024)) != 0)
+		output.append(buffer,rec_byte);
 	return output;
 }
 
@@ -54,7 +53,7 @@ char **CgiHandler::set_env(Request & request) {
 }
 
 void CgiHandler::handle_cgi(Request & request, Response & response, Server & virtual_server, Location & location) {
-	std::string cgi_path = parse_cgi_path(request, location);
+	std::string cgi_path = parse_cgi_path(location);
 	char *argv[2] = {(char *)cgi_path.c_str(), NULL};
 	int pid1;
 	int pid2;
@@ -109,13 +108,28 @@ void CgiHandler::handle_cgi(Request & request, Response & response, Server & vir
 			response.set_data(cgi_body);
 		}
 		else {
-			std::string output;
-			output += std::string(HTTP_PROTOCOL) + " 200 OK\r\n";
-			output += "Content-Type: text/html\r\n";
-			output += "Content-Length: " + std::to_string(cgi_body.length()) + "\r\n";
-			output += "\r\n";
-			output += cgi_body;
-			response.set_data(output);
+			if (request.get_method() == "POST") {
+				std::string output;
+				output += std::string(HTTP_PROTOCOL) + " 200 OK\r\n";
+				output += "Content-Type: text/html\r\n";
+				output += "Content-Length: " + std::to_string(cgi_body.length()) + "\r\n";
+				output += "\r\n";
+				output += cgi_body;
+				response.set_data(output);
+			}
+			else if (request.get_method() == "GET") {
+				if (cgi_body.substr(0,8) != "HTTP/1.1") {
+					std::string output;
+					output += std::string(HTTP_PROTOCOL) + " 200 OK\r\n";
+					output += "Content-Type: text/html\r\n";
+					output += "Content-Length: " + std::to_string(cgi_body.length()) + "\r\n";
+					output += "\r\n";
+					output += cgi_body;
+					response.set_data(output);
+				}
+				else
+					response.set_data(cgi_body);
+			}
 		}
 		close(pipefd_input[0]);
 		close(pipefd_output[0]);

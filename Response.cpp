@@ -128,7 +128,7 @@ void Response::parse_resource(std::string path) {
 			this->_data += "text/css";
 		else if (resouce_type.compare("js") == 0)
 			this->_data += "text/javascript";
-		else if (resouce_type.compare("jpg") == 0)
+		else if (resouce_type.compare("jpg") == 0 || resouce_type.compare("jpeg") == 0)
 			this->_data += "image/jpeg";
 		else if (resouce_type.compare("png") == 0)
 			this->_data += "image/png";
@@ -329,6 +329,10 @@ void	Response::parse_GET_method(Request & request, Server & virtual_server) {
 					this->parse_error_pages("404", "Not Found", virtual_server);
 			}
 		}
+		else if (location->get_cgi_pass() != "") {
+				CgiHandler cgi;
+				cgi.handle_cgi(request, *this, virtual_server, *location);
+		}
 		else {
 			this->parse_resource(resource_path);
 			if (this->_data == "")
@@ -346,13 +350,13 @@ void	Response::parse_POST_method(Request & request, Server & virtual_server) {
 		std::string resource_path = parse_resource_path(request, *location);
 		if ((*location).get_return() != "") 
 			this->handle_return((*location).get_return());
-		else if (resource_path[resource_path.length() - 1] == '/')
-				this->parse_error_pages("403", "Forbidden", virtual_server);
+		// else if (resource_path[resource_path.length() - 1] == '/')
+		// 		this->parse_error_pages("403", "Forbidden", virtual_server);
 		else {
 			if (location->get_cgi_pass() == "")
 				this->parse_error_pages("405", "Method not allowed ", virtual_server);
 			else if (request.get_content_length() != "" && virtual_server.get_client_max_body_size() != "" && \
-			std::stoll(request.get_content_length()) > std::stoll(virtual_server.get_client_max_body_size()))
+			std::stoull(request.get_content_length()) > std::stoull(virtual_server.get_client_max_body_size()))
 				this->parse_error_pages("413", "Payload Too Large", virtual_server);
 			else {
 				CgiHandler cgi;

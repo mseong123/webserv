@@ -2,13 +2,14 @@
 
 import cgi
 import os
-# import cgitb
-# cgitb.enable()
+import sys
+from urllib import unquote
+import cgitb
+cgitb.enable()
 
 form = cgi.FieldStorage()
-
 request_method = os.environ.get("REQUEST_METHOD").upper()
-route = "." + os.environ.get("ROUTE").upper()
+route = unquote("." + os.environ.get("ROUTE"))
 
 if request_method == "POST":
 	if "file" in form and form["file"].filename:
@@ -27,10 +28,31 @@ if request_method == "POST":
 
 elif request_method == "GET":
 	if os.path.exists(route):
-		with open(route, 'r') as file:
-			file_contents = file.read()
-		print(file_contents)
-
+		root, extension = os.path.splitext(route)
+		print("HTTP/1.1 200 OK")
+		if extension == ".html" or extension == ".txt":
+			file_content = ""
+			with open(route, mode="rb") as file:
+				file_content = file.read()
+			if extension == ".html":
+				print("Content-Type: text/html")
+			else:
+				print("Content-Type: text/plain")
+			print("\r\n")
+			print(file_content)
+			print("\r\n")
+		else:
+			print("Content-Type: text/plain")
+			print("\r\n")
+			print("Error: Python CGI can only serve .html and .txt files")
+			print("\r\n")
 	else:
-		print("File {}' not found.".format(route))
+		error_message_body = "<html><head><title>404 Not Found(CGI)</title></head><body><center><h1>404 Not Found(CGI)</h1></center></body></html>"
+		print("HTTP/1.1 404 Not Found(CGI)")
+		print("Content-Type: text/html")
+		print("Content-Length: " + str(len(error_message_body)))
+		print("\r\n")
+		print(error_message_body)
+		print("\r\n")
+		
 

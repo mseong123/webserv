@@ -2,8 +2,8 @@ server {
 	listen localhost:8010;
 	server_name _;
 	
-	location / {
-		cgi_pass /cgi;
+	location /cgi {
+		cgi_pass /cgi/upload.py;
 	}
 }
 
