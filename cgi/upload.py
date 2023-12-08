@@ -33,7 +33,7 @@ elif request_method == "GET":
 		with open(route, mode="rb") as file:
 			file_content = file.read()
 		print("HTTP/1.1 200 OK")
-		if (extension == ".html" or extension == ".txt") and len(file_content) < 25000:
+		if (extension == ".html" or extension == ".txt") and len(file_content) < 50000:
 			if extension == ".html":
 				print("Content-Type: text/html")
 			else:
@@ -44,7 +44,7 @@ elif request_method == "GET":
 		else:
 			print("Content-Type: text/plain")
 			print("\r\n")
-			print("Error: Python CGI can only serve .html and .txt files (these files must be less than 25kb)")
+			print("Error: Python CGI can only serve .html and .txt files (these files must be less than 50kb)")
 			print("\r\n")
 	else:
 		error_message_body = "<html><head><title>404 Not Found(CGI-Python)</title></head><body><center><h1>404 Not Found(CGI-Python)</h1></center></body></html>"
