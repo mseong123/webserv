@@ -44,12 +44,19 @@ server {
 server {
 	listen 127.0.0.1:8050;
 	location /cgi {
-		cgi_pass /cgi/upload.py;
+		cgi_pass /cgi/cpp_cgi;
 	}
 }
 
 server {
 	listen 127.0.0.1:8060;
+	location /cgi {
+		cgi_pass /cgi/cpp_cgi;
+	}
+}
+
+server {
+	listen 127.0.0.1:8070;
 	location / {
 		return https://wikipedia.com;
 	}

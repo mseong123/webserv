@@ -54,7 +54,8 @@ char **CgiHandler::set_env(Request & request) {
 
 void CgiHandler::handle_cgi(Request & request, Response & response, Server & virtual_server, Location & location) {
 	std::string cgi_path = parse_cgi_path(location);
-	char *argv[2] = {(char *)cgi_path.c_str(), NULL};
+	std::string cgi_dir = cgi_path.substr(0, cgi_path.find_first_of("/", 2) + 1);
+	char *argv[3] = {(char *)cgi_path.c_str(), (char *)cgi_dir.c_str(), NULL};
 	int pid1;
 	int pid2;
 	int i = 2;
