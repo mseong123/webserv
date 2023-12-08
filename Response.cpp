@@ -50,9 +50,11 @@ std::string 	Response::parse_custom_error_pages(std::string error, std::map<std:
 		if (it->first == error) {
 			std::string path = "." + it->second;
 			std::fstream fs(path, std::fstream::in);
-			if (fs.is_open())
+			if (fs.is_open()) {
 				while(std::getline(fs, buffer, '\n'))
 					temp_message_body += buffer;
+				fs.close();
+			}
 		}
 	}
 	return temp_message_body;
@@ -99,12 +101,44 @@ Location *	Response::parse_location(Request & request, Server & virtual_server) 
 		return NULL;
 }
 
+std::string Response::urlDecode(const std::string& input) {
+    std::ostringstream decoded;
+    decoded.fill('0');
+
+    for (size_t i = 0; i < input.length(); ++i) {
+        char ch = input[i];
+        if (ch == '%' && i + 2 < input.length()) {
+            // Found a percent-encoded sequence
+            char hex1 = input[++i];
+            char hex2 = input[++i];
+
+            // Convert hexadecimal characters to integer
+            std::istringstream hexStream("0x" + std::string(1, hex1) + std::string(1, hex2));
+            int value;
+            hexStream >> std::hex >> value;
+
+            // Append the decoded character to the result
+            decoded << static_cast<char>(value);
+        } else if (ch == '+') {
+            // Replace '+' with space
+            decoded << ' ';
+        } else {
+            // Append other characters as they are
+            decoded << ch;
+        }
+    }
+
+    return decoded.str();
+}
+
 std::string	Response::parse_resource_path(Request & request, Location & location) {
+	std::string encodedString = request.get_route();
+    std::string decodedString = urlDecode(encodedString);
 	std::string resource_path = ".";
 
 	if (location.get_root() != "")
 		resource_path += location.get_root();
-	resource_path += request.get_route();
+	resource_path += decodedString;
 	return resource_path;
 }
 

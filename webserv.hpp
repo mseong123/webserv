@@ -18,7 +18,10 @@
 # include <ctime>
 # include <stdio.h>
 # include <fcntl.h>
-#include <sys/ioctl.h>
+# include <sys/ioctl.h>
+# include <iomanip>
+# include <sstream>
+
 
 // class headers
 # include "CustomException.hpp"

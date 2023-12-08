@@ -47,6 +47,7 @@ void Config::parse_file(std::vector<Server> & _servers) {
 				}
 			}
 		}
+		fs.close();
 		if (_servers.empty())
 			throw CustomException("CONFIG_FILE_ERROR: need a server block");
 	}

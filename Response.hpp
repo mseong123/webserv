@@ -14,6 +14,7 @@ class	Response {
 		void 	parse_error_pages(std::string error, std::string description, Server & virtual_server);
 		void	parse_status_line(std::string status, std::string description);
 		Location *	parse_location(Request & request, Server & virtual_server);
+		std::string urlDecode(const std::string& input);
 		std::string	parse_resource_path(Request & request, Location & location);
 		void 	parse_resource(std::string path);
 		std::string parse_autoindex_css();
