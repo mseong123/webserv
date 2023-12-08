@@ -6,7 +6,7 @@
 /*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/12/06 07:46:42 by melee            ###   ########.fr       */
+/*   Updated: 2023/12/08 19:18:28 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,8 @@ void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks, std::v
 				continue;
 			conn.get_request().parse_request_data();
 			conn.get_response().parse_response_data(conn.get_request(), servers);
-			if (send(fds.at(i).fd, conn.get_response().get_data().c_str(), conn.get_response().get_data().length(), 0) < 0)
-				throw CustomException("Send failure: " + std::string(strerror(errno)));
+			if (send(fds.at(i).fd, conn.get_response().get_data().c_str(), conn.get_response().get_data().length(), 0) <= 0)
+				close_fd(i);
 			// std::cout << "Response sent." << std::endl;
 			close_fd(i);
 			continue;
@@ -164,10 +164,15 @@ void	Poll::recv_data(int fd, Connection &conn)
 
 	recvstat = recv(fd, buffer, RECV_BUFFER_SIZE - 2, 0);
 	if (recvstat < 0)
-		throw CustomException("Recv failure: " + std::string(strerror(errno)));
-	buffer[recvstat] = 0;
-	conn.get_request().set_data(conn.get_request().get_data().append(buffer, recvstat));
-	update_fd(fd, POLLIN | POLLPRI | POLLOUT | POLLWRBAND);
+		close_fd(fd);
+	else if (recvstat == 0)
+		update_fd(fd, POLLOUT | POLLWRBAND);
+	else
+	{
+		buffer[recvstat] = 0;
+		conn.get_request().set_data(conn.get_request().get_data().append(buffer, recvstat));
+		update_fd(fd, POLLIN | POLLPRI | POLLOUT | POLLWRBAND);
+	}
 	return ;
 }
 
