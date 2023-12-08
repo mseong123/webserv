@@ -44,7 +44,7 @@ server {
 server {
 	listen 127.0.0.1:8050;
 	location /cgi {
-		cgi_pass /cgi/upload.py;
+		cgi_pass /cgi/cgi;
 	}
 }
 
