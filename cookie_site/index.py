@@ -4,7 +4,9 @@ import cgi
 import os
 import sys
 import cgitb
-from ft_cookies.cookie_man import make_sid, get_sid, read_dict, write_dict
+from ft_cookies.cookie_man import make_sid, get_sid
+from ft_cookies.cookie_man import read_dict, write_dict
+from ft_cookies.cookie_man import cookie_expire
 
 
 cgitb.enable()
@@ -40,7 +42,7 @@ if request_method == "GET":
 	print("HTTP/1.1 200 OK")
 	print("Content-Type: text/html")
 	if set_cookie:
-		print("Set-Cookie: sid=" + sid + ";")
+		print("Set-Cookie: sid=" + sid + "; Expires=" + cookie_expire())
 	print("\r\n")
 
 	#### Create response HTTP body

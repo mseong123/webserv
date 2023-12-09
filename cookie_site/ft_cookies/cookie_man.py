@@ -6,7 +6,7 @@
 #    By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/09 12:58:04 by yetay             #+#    #+#              #
-#    Updated: 2023/12/09 15:21:19 by yetay            ###   ########.fr        #
+#    Updated: 2023/12/09 16:30:56 by yetay            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,7 @@ import random
 import string
 import os
 import json
+from datetime import date
 
 
 def make_sid(N):
@@ -52,3 +53,11 @@ def write_dict(cdict):
 		file.write("\n")
 		file.close()
 	return True
+
+
+def cookie_expire():
+	"""Return the HTTP date format string of the next New Years Day"""
+	year = date.today().strftime('%Y')
+	year = int(year) + 1
+	dow = date(year, 1, 1).strftime('%a')
+	return dow + ", 1 Jan " + str(year) + " 00:00:00 GMT"
