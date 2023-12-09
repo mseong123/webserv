@@ -20,7 +20,7 @@ if request_method == "GET":
 		sid = make_sid(16)
 		while sid in cdict:
 			sid = make_sid(16)
-		cdict[sid] = str(1)
+		cdict[sid] = 1
 	write_dict(cdict)
 	
 	#### Create response HTTP header
@@ -33,8 +33,8 @@ if request_method == "GET":
 		file_content = file.read()
 		file.close()
 	print(file_content)
-	ctr = str(1)
-	print("<span class='ctr'>" + ctr + "</span>")
+	ctr = 1
+	print("<span class='ctr'>" + str(ctr) + "</span>")
 	with open("cookie_site/data/html/tail", mode="r") as file:
 		file_content = file.read()
 		file.close()
