@@ -1,3 +1,5 @@
 .*.swp
 obj
 webserv
+.DS_Store
+cpp_cgi/cpp_cgi
