@@ -16,7 +16,7 @@ request_method = os.environ.get("REQUEST_METHOD").upper()
 
 if request_method == "GET":
 	#### Read cookie database
-	cdict = read_dict()
+	cdict = read_dict("cookie_site/data/ctr.dict")
 	
 	#### Obtain session ID and counter
 	set_cookie = False
@@ -36,7 +36,7 @@ if request_method == "GET":
 			set_cookie = True
 		else:
 			cdict[sid] += 1
-	write_dict(cdict)
+	write_dict(cdict, "cookie_site/data/ctr.dict")
 	
 	#### Create response HTTP header
 	print("HTTP/1.1 200 OK")

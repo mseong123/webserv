@@ -6,7 +6,7 @@
 #    By: yetay <yetay@student.42kl.edu.my>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/09 12:58:04 by yetay             #+#    #+#              #
-#    Updated: 2023/12/09 16:30:56 by yetay            ###   ########.fr        #
+#    Updated: 2023/12/09 17:13:42 by yetay            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,12 +29,12 @@ def get_sid(s):
 	return s["sid"]
 
 
-def read_dict():
+def read_dict(datafile):
 	"""Returns a dictionary loaded from data file"""
 	cdict = None
 	datafile = "cookie_site/data/ctr.dict"
 	if os.path.exists(datafile) and os.path.isfile(datafile):
-		with open("cookie_site/data/ctr.dict", mode="r") as file:
+		with open(datafile, mode="r") as file:
 			cdict = file.read()
 			if len(cdict) == 0:
 				cdict = {}
@@ -46,9 +46,9 @@ def read_dict():
 	return cdict
 
 
-def write_dict(cdict):
+def write_dict(cdict, datafile):
 	"""Write a dictionary to data file"""
-	with open("cookie_site/data/ctr.dict", mode="w") as file:
+	with open(datafile, mode="w") as file:
 		file.write(json.dumps(cdict))
 		file.write("\n")
 		file.close()
