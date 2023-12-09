@@ -6,7 +6,7 @@
 /*   By: melee <melee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:27:37 by yetay             #+#    #+#             */
-/*   Updated: 2023/12/08 19:18:28 by yetay            ###   ########.fr       */
+/*   Updated: 2023/12/09 11:04:58 by yetay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks, std::v
 			if (Connection::is_listen_sockfd(fds.at(i).fd))
 			{
 				struct addrinfo	*res;
-				Connection		*conn = new Connection;
+				Connection		conn;
 
 				res = NULL;
 				for (size_t i = 0; i < socks.size(); i++)
@@ -65,8 +65,8 @@ void	Poll::process(std::vector< std::pair<int, struct addrinfo> > &socks, std::v
 				}
 				if (res == NULL)
 					throw CustomException("Accept failure: unknown listening FD");
-				accept_sock(fds.at(i).fd, *conn, res);
-				Connection::io_conn.push_back(*conn);
+				accept_sock(fds.at(i).fd, conn, res);
+				Connection::io_conn.push_back(conn);
 			}
 			else
 			{
