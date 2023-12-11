@@ -108,23 +108,25 @@ void parse_resource(std::string route) {
 		resouce_type = route.substr(route.find_last_of(".") + 1);
 		std::cout << "HTTP/1.1 200 OK\r\n";
 		std::cout << "Content-Type: ";
-		if ((resouce_type.compare("html") == 0 || resouce_type.compare("txt") == 0) && resource_content.length() < 50000) {
-			if (resouce_type.compare("html") == 0)
-				std::cout << "text/html";
-			else
-				std::cout << "text/plain";
-			std::cout << "\r\n";
-			std::cout << "Content-Length: ";
-			std::cout << std::to_string(resource_content.length()) + "\r\n";
-			std::cout << resource_content;
-			std::cout << "\r\n";
-		}
-		else {
-			std::cout << "Content-Type: text/plain\r\n";
-			std::cout << "\r\n";
-			std::cout << "Error: C++ CGI can only serve .html and .txt files and files < 50kb";
-			std::cout << "\r\n";
-		}
+		if (resouce_type.compare("html") == 0) 
+			std::cout << "text/html";
+		else if (resouce_type.compare("css") == 0)
+			std::cout << "text/css";
+		else if (resouce_type.compare("js") == 0)
+			std::cout << "text/javascript";
+		else if (resouce_type.compare("jpeg") == 0 || resouce_type.compare("jpg") == 0)
+			std::cout << "image/jpg";
+		else if (resouce_type.compare("png") == 0)
+			std::cout << "image/png";
+		else if (resouce_type.compare("pdf") == 0)
+			std::cout << "application/pdf";
+		else
+			std::cout << "text/plain";
+		std::cout << "\r\n";
+		std::cout << "Content-Length: ";
+		std::cout << std::to_string(resource_content.length()) + "\r\n";
+		std::cout << resource_content;
+		std::cout << "\r\n";
 	}
 	else {
 		std::string error_message_body = "<html><head><title>404 Not Found(CGI - C++)</title></head><body><center><h1>404 Not Found(CGI-C++)</h1></center></body></html>";

@@ -22,7 +22,6 @@ if request_method == "POST":
 		print("<div>File uploaded successfully.</div>")
 		print("<div>Uploaded File: {}</div>".format(filename))
 		print("</body></html>")
-
 	else:
 		print("No file uploaded.")
 
@@ -33,19 +32,23 @@ elif request_method == "GET":
 		with open(route, mode="rb") as file:
 			file_content = file.read()
 		print("HTTP/1.1 200 OK")
-		if (extension == ".html" or extension == ".txt") and len(file_content) < 50000:
-			if extension == ".html":
-				print("Content-Type: text/html")
-			else:
-				print("Content-Type: text/plain")
-			print("\r\n")
-			print(file_content)
-			print("\r\n")
+		if extension == ".html":
+			print("Content-Type: text/html")
+		elif extension == ".css":
+			print("Content-Type: text/css")
+		elif extension == ".js":
+			print("Content-Type: text/javascript")
+		elif extension == ".jpg" or extension == ".jpeg":
+			print("Content-Type: image/jpeg")
+		elif extension == ".png":
+			print("Content-Type: image/png")
+		elif extension == ".pdf":
+			print("Content-Type: application/pdf")
 		else:
 			print("Content-Type: text/plain")
-			print("\r\n")
-			print("Error: Python CGI can only serve .html and .txt files (these files must be less than 50kb)")
-			print("\r\n")
+		print("\r\n")
+		print(file_content)
+		print("\r\n")
 	else:
 		error_message_body = "<html><head><title>404 Not Found(CGI-Python)</title></head><body><center><h1>404 Not Found(CGI-Python)</h1></center></body></html>"
 		print("HTTP/1.1 404 Not Found(CGI-Python)")
