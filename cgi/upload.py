@@ -46,16 +46,16 @@ elif request_method == "GET":
 			print("Content-Type: application/pdf")
 		else:
 			print("Content-Type: text/plain")
-		print("\r\n")
+		print("\r")
 		print(file_content)
-		print("\r\n")
+		print("\r")
 	else:
 		error_message_body = "<html><head><title>404 Not Found(CGI-Python)</title></head><body><center><h1>404 Not Found(CGI-Python)</h1></center></body></html>"
 		print("HTTP/1.1 404 Not Found(CGI-Python)")
 		print("Content-Type: text/html")
 		print("Content-Length: " + str(len(error_message_body)))
-		print("\r\n")
+		print("\r")
 		print(error_message_body)
-		print("\r\n")
+		print("\r")
 		
 
