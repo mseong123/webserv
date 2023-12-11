@@ -101,22 +101,26 @@ void CgiHandler::handle_cgi(Request & request, Response & response, Server & vir
 		close(pipefd_output[1]);
 		close(pipefd_stderror[1]);
 		int exit_status;
-		waitpid(pid2, &exit_status, 0);
 
 		std::string cgi_body;
 		cgi_body = this->parse_cgi_output(pipefd_output[0], pipefd_stderror[0]);
+		waitpid(pid2, &exit_status, 0);
 		if (WIFEXITED(exit_status) && WEXITSTATUS(exit_status) == 3) {
 			response.set_data(cgi_body);
 		}
 		else {
 			if (request.get_method() == "POST") {
-				std::string output;
-				output += std::string(HTTP_PROTOCOL) + " 200 OK\r\n";
-				output += "Content-Type: text/html\r\n";
-				output += "Content-Length: " + std::to_string(cgi_body.length()) + "\r\n";
-				output += "\r\n";
-				output += cgi_body;
-				response.set_data(output);
+				if (cgi_body.substr(0,8) != "HTTP/1.1") {
+					std::string output;
+					output += std::string(HTTP_PROTOCOL) + " 200 OK\r\n";
+					output += "Content-Type: text/html\r\n";
+					output += "Content-Length: " + std::to_string(cgi_body.length()) + "\r\n";
+					output += "\r\n";
+					output += cgi_body;
+					response.set_data(output);
+				}
+				else
+					response.set_data(cgi_body);
 			}
 			else if (request.get_method() == "GET") {
 				if (cgi_body.substr(0,8) != "HTTP/1.1") {
