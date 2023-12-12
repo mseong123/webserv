@@ -62,7 +62,10 @@ server {
 	}
 }
 
-
-
-
-
+server {
+	listen 127.0.0.1:8017;
+	error_pages 404 /error/custom_404.html;
+	location / {
+		cgi_pass /cookie_site/index.py;
+	}
+}
