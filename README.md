@@ -30,53 +30,30 @@ Clone the repository
 
 ```
 git clone https://github.com/mseong123/webserv.git
+cd webserv
 ```
 
 ## Compile and Run
-
-
 
 ```shell
 make
 ```
 
-To compile the bonus part, `cd` into the cloned directory and:
+A default config file (default_config) has already been written and will be parsed automatically by the program to run. To run the program:
 
 ```shell
-make bonus
+./webserv
 ```
 
-To run the program:
+## Key Features
 
-For mandatory:
+1) To serve a (already prepared) static website, in browser(Chrome/Firefox/Safari) type:
+```shell
+http://127.0.0.1:8010/webpage/
 ```
-./cub3D ./maps/working1.cub
-```
-For bonus:
-```
-./cub3D_bonus ./maps/sonic_bonus.cub
-```
-## Controls
+2)
 
-Controls for movement and rotation are:
 
-- `W`: move forward
-- `S`: move backward
-- `A`: strafe left
-- `D`: strafe right
-- `left arrow`: rotate left
-- `right arrow`: rotate right
-- `mouse`: rotate by moving the mouse (bonus only)
-- `ESC`: exit the program
-
-## Useful Resources
-
-Useful resources for this project are:
-
-- Raycasting: [Lode's Computer Graphics Tutorial - Raycasting](https://lodev.org/cgtutor/raycasting.html)
-- Raycasting: [Permadi's Raycasting tutorial](https://permadi.com/1996/05/ray-casting-tutorial-table-of-contents/)
-- MinilibX tutorial : [harm-smits.github.io](https://harm-smits.github.io/42docs/libs/minilibx.html)
-- [Subject PDF](https://github.com/mseong123/cub3D/blob/main/en.subject.pdf)
 
 
 ---
