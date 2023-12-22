@@ -6,8 +6,10 @@ to simulate real conditions such as:
 - high availability (server will not crash once run)
 - can handle high throughput (uploading and downloading very large files simultaneously)
 - can serve high number of concurrent clients without interruptions.
-- use of CGI (Common Gateway Interface) written in C++ and Python to handle complex client request.
+- use of CGI (Common Gateway Interface) written in C++ and Python to handle complex client request (such as uploading of files and downloading of files).
 - use of cookies and session.
+
+The webserver can handle GET,POST and DELETE request.
 
 ## Definitions
 ### What is a I/O Multiplexing ?
@@ -35,6 +37,8 @@ cd webserv
 
 ## Compile and Run
 
+Compile the program
+
 ```shell
 make
 ```
@@ -47,14 +51,50 @@ A default config file (default_config) has already been written and will be pars
 
 ## Key Features
 
-1) To serve a (already prepared) static website, in browser(Chrome/Firefox/Safari) type:
+1) To serve a (already prepared) static website, in browser(Chrome/Firefox/Safari), navigate to:
+
 ```shell
 http://127.0.0.1:8010/webpage/
 ```
-2)
+
+2) To upload some files static website, in browser(Chrome/Firefox/Safari), navigate to:
+
+```shell
+http://127.0.0.1:8050/cgi/upload.html
+```
+
+You can get back the file using:
+
+```shell
+http://127.0.0.1:8050/cgi/[filename]
+```
+
+*The uploading feature is a Python CGI implementation using port 8050. To test out the C++ CGI implementation, repeat the above navigation in browser but use port 8060 instead
+**You can run multiple uploads and downloads of big files and the server is available at all times.
+
+3) To test cookie and session feature, navigate to:
+
+```shell
+http://127.0.0.1:8017/cookie_site/index.py
+```
+Insert the require information, close your browser and renavigate to the same address. The session should persist indicating that the cookie and session is working.
+
+4) To DELETE a resource (open up bash/shell and type the following):
+
+```shell
+curl -X DELETE 127.0.0.1:8040/delete/file_to_be_deleted;
+```
+
+5) Do anything you want by changing the config file and set the following rules for server blocks and location blocks (for those who are familiar with NGINX):
+- listen (address for server to listen on) - server block only
+- server_name (for host names) - server block only
+- error_pages (for setting up custom error pages) - server block only
+- return (for redirection) - location block only
+- index (for default file to serve in a location block) - location block only
+- autoindex (to serve folder directory when a folder resource is requested) - location block only
+- cgi_pass (to execute CGI program) - location block only
+- allowed methods (GET, POST, DELETE only) - location block only
+
+test them out by using any browser.
 
 
-
-
----
-Team Project by [mseong123](https://github.com/mseong123) and [lewislee42](https://github.com/lewislee42)
