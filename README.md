@@ -1,6 +1,6 @@
 # webserv | 42KL
 
-This project involves building a webserver (with functionalities similar to Nginx) that can parse a configuration file and serve clients using HTTP protocol resources such as HTML, CSS, javascript, jpegs, png, pdf files. 
+This project involves building a webserver (with functionalities similar to Nginx) that can parse a configuration file and serve clients using HTTP protocol, resources such as HTML, CSS, javascript, jpegs, png, pdf files. 
 It is fully implemented using C++ object oriented paradigm which uses classes. The project requires use of underlying C system APIs such as Socket(socket programming) and Poll(I/O Multiplexing). The server is built
 to simulate real conditions such as:
 - high availability (server will not crash once run)
